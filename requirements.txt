@@ -1,0 +1,38 @@
+# Dependencias completas (Sprint 1 + Sprint 2).
+#
+# Requiere Python 3.11 o 3.12 (spaCy/Presidio/sentence-transformers no
+# tienen binarios listos para versiones muy nuevas como 3.14 todavía —
+# ver docs/SPRINT_PLAN.md y el README para instrucciones de instalación
+# en paralelo con requirements-sprint1.txt).
+#
+# A propósito no fijamos versiones exactas viejas (aprendimos esto en el
+# Sprint 1): dejamos rangos mínimos para que pip resuelva versiones
+# compatibles entre sí y con binarios ya publicados.
+
+# --- Sprint 1: API base ---
+fastapi>=0.115
+uvicorn[standard]>=0.30
+pydantic>=2.10
+pydantic-settings>=2.6
+python-dotenv>=1.0
+anthropic>=0.34
+httpx>=0.27
+
+# --- Sprint 2: módulo Secure (detección + anonimización + reidentificación) ---
+presidio-analyzer>=2.2.355
+presidio-anonymizer>=2.2.355
+spacy>=3.7.5
+cryptography>=42.0
+
+# --- Sprint 2: evaluación y métricas ---
+pandas>=2.2
+scikit-learn>=1.5
+sentence-transformers>=3.0
+matplotlib>=3.9
+
+# --- Pruebas ---
+pytest>=8.3
+pytest-asyncio>=0.24
+
+# Después de instalar, descarga el modelo de spaCy en español:
+#   python -m spacy download es_core_news_md

@@ -1,0 +1,19 @@
+.venv/
+.venv*/
+__pycache__/
+*.pyc
+.pytest_cache/
+.env
+
+# Logs y datos sensibles/efímeros generados en tiempo de ejecución — estos
+# SÍ deben quedar fuera del repo (la llave de cifrado nunca se sube, y los
+# logs crudos son solo de pruebas locales).
+logs/*.jsonl
+data/*.enc.jsonl
+data/.reid_key
+
+# OJO: data/evaluation_results.csv, evaluation_summary.json y
+# evaluation_metrics.png NO se ignoran a propósito — son la evidencia de
+# los resultados del Sprint 2 y conviene que queden versionados en el
+# repo para la entrega (corran `python -m scripts.evaluate` una vez más
+# antes de hacer commit para que queden con los datos más recientes).
