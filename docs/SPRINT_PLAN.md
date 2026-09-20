@@ -1,44 +1,32 @@
 # Plan de trabajo — FDSI-GP-04 (2 sprints)
 
 ## Contexto
-- Hito 1 (Propuesta Estructurada) ya fue avalado — checklist de aprobación del 05/09 completo.
-- Alcance declarado en la propuesta: "realizable antes del 26/09/2026".
-- Objetivo de estos dos sprints: llegar a **algo funcional de punta a punta**, aunque no se alcancen a pulir todos los criterios de evaluación. Es preferible tener Unsecure + Secure corriendo con 2-3 pruebas sólidas, que tener 5 pruebas a medio hacer.
+- El Hito 1 (Propuesta Estructurada) ya fue aprobado, el 05/09.
+- La propuesta dice que el proyecto debe estar listo antes del 26/09/2026.
+- La meta de estos dos sprints era tener algo que funcione de principio a fin, aunque no se alcanzaran a pulir todos los detalles. Mejor tener Unsecure y Secure funcionando con pruebas sólidas, que tener muchas pruebas a medias.
 
-## Sprint 1 — Infraestructura + flujo Unsecure (línea base)
-**Objetivo:** tener el escenario "Unsecure" de la propuesta corriendo de punta a punta: mensaje del usuario → LLM sin ninguna transformación → log en texto plano. Este escenario es la línea base contra la que se compara todo en Sprint 2, así que conviene dejarlo firme primero.
+## Sprint 1 — Flujo Unsecure (línea base)
+Objetivo: tener el escenario "Unsecure" de la propuesta funcionando de principio a fin: el mensaje del usuario se manda al LLM sin ningún filtro y queda guardado en un log de texto plano. Este escenario es la base con la que se compara todo lo demás en el Sprint 2.
 
-Entregables de este sprint (ya generados en este scaffold):
-1. Estructura del proyecto: FastAPI + Docker + `requirements.txt`.
-2. Endpoint `POST /unsecure/chat`: recibe el mensaje, lo reenvía tal cual al LLM (o a un mock si no hay API key configurada) y registra la conversación completa —incluyendo el PII— en `logs/unsecure_raw.jsonl`.
-3. Dataset `data/pii_test_cases.csv` con 24 casos de PII colombiano en formatos variados (cédulas, teléfonos, correos, nombres, direcciones) — esto sirve para T04 y también como insumo para evaluar el detector en Sprint 2.
-4. Pruebas `pytest` que documentan el comportamiento actual de Unsecure (el mensaje llega intacto al "LLM" y el log queda en texto plano) — esto es la evidencia de línea base para T01 y T02.
+Lo que se hizo:
+1. Estructura del proyecto (servidor, configuración, dependencias).
+2. Un endpoint que recibe el mensaje, lo manda tal cual al LLM (o a un simulador si no hay conexión a un LLM real) y guarda la conversación completa, incluyendo el dato personal, en un archivo de log.
+3. Un conjunto de 24 mensajes de prueba con datos personales colombianos en distintos formatos (cédulas, teléfonos, correos, nombres, direcciones), que sirve tanto para probar el Sprint 1 como para evaluar el Sprint 2.
+4. Pruebas automatizadas que confirman que, en este escenario, el mensaje llega completo al LLM y el log queda sin ningún filtro.
 
-## Sprint 2 — Módulo Secure (detección + anonimización) y evaluación ✅
-**Objetivo:** implementar el módulo de detección/anonimización de PII y comparar Secure vs Unsecure con las pruebas y métricas de la propuesta.
+## Sprint 2 — Flujo Secure y evaluación
+Objetivo: construir el módulo que detecta y protege los datos personales, y comparar los resultados de Secure contra Unsecure con las pruebas y métricas de la propuesta.
 
-Completado:
-1. ✅ Presidio (Analyzer + Anonymizer) con spaCy en español (`es_core_news_md`) + reconocedores custom por regex para cédula y teléfono colombianos, más un reconocedor extra para nombres en MAYÚSCULAS SOSTENIDAS (el NER de spaCy los pasaba por alto — ver `app/pii/recognizers.py`).
-2. ✅ Endpoint `POST /secure/chat`: anonimiza antes de llamar al LLM, guarda solo la versión anonimizada en `logs/secure_anon.jsonl`, guarda el mapeo token→PII cifrado (Fernet) y aparte en `data/secure_mapping.enc.jsonl`, y reidentifica la respuesta SOLO para el usuario legítimo antes de devolverla (nunca en el log ni en lo enviado al LLM).
-3. ✅ T01, T02, T03 automatizados en `tests/test_secure_flow.py` (9/9 pruebas pasan, incluyendo las 4 de Sprint 1).
-4. ✅ T04 y T05 + las 5 métricas de la propuesta en `scripts/evaluate.py`, con gráfica (`data/evaluation_metrics.png`).
-5. ⬜ Redactar el reporte narrativo del Hito 2 (este documento + el README ya traen los resultados numéricos; falta el documento de entrega formal si el formato del seminario lo pide aparte).
+Lo que se hizo:
+1. Un módulo que detecta datos personales (nombres, cédulas, teléfonos, correos) en el mensaje, usando reconocimiento de texto en español más reglas propias para los formatos colombianos.
+2. Un endpoint que anonimiza el mensaje antes de mandarlo al LLM, guarda en el log solo la versión anonimizada (nunca el dato real), guarda aparte y cifrado el mapeo entre los marcadores y los datos reales, y solo le devuelve el dato real al usuario legítimo en la respuesta final.
+3. Pruebas automatizadas que confirman ese comportamiento (9 de 9 pruebas pasan en total, contando las del Sprint 1).
+4. Un script de evaluación que corre los mensajes de prueba y calcula las métricas que pedía la propuesta, con una gráfica de resultados.
+5. Pendiente: redactar el documento formal de entrega, si el seminario pide uno aparte de este repositorio.
 
-### Resultados obtenidos (ver README para la tabla completa)
-Recall 1.00, falsos positivos 0.00, fuga residual 0, latencia añadida ~41ms — los 4 dentro del umbral de la propuesta. La "similitud semántica" (1.00) es un proxy textual porque se corrió con el LLM mock; queda documentado como limitación a resolver si se prueba con un LLM real.
+### Resultados obtenidos (el detalle completo está en el README)
+Detección de datos personales: 1.00. Falsos positivos: 0.00. Datos que se filtran hacia el LLM: 0. Tiempo extra que toma el filtro: unos 41 milisegundos. Los cuatro resultados están dentro de lo que pedía la propuesta. La métrica de "utilidad de la respuesta" dio 1.00, pero es una aproximación porque se probó con un LLM simulado, no uno real (ver limitaciones abajo).
 
-### Limitaciones que quedaron pendientes (ver README, sección "Limitaciones conocidas")
-- Direcciones (DIRECCION) no se detectan todavía — 3 casos del dataset (T19-T21) quedan como falla conocida, no oculta.
-- La métrica de utilidad/similitud semántica necesita reemplazarse por embeddings reales si se usa un LLM de verdad en vez del mock.
-
-## Si el tiempo aprieta (plan de contingencia)
-Prioriza en este orden:
-1. Unsecure funcional (Sprint 1) — ✅ cubierto.
-2. Detección PII con Presidio + reglas propias — ✅ cubierto (recall 1.00 en el dataset de prueba).
-3. Al menos T01, T02 y T04 con las métricas de recall y fuga residual — ✅ cubierto, junto con T03 y T05.
-4. Si aún falta tiempo: implementar DIRECCION y cambiar el proxy de similitud semántica por embeddings reales — quedan como siguientes pasos, no bloquean la sustentación.
-
-## Reparto sugerido entre los 3 integrantes (para pulir antes de sustentar)
-- Persona A: reconocedor de DIRECCION (patrón Calle/Cra/Diagonal + número, siguiendo el esquema de `recognizers.py`) y revisar más formatos de cédula/teléfono.
-- Persona B: reemplazar el proxy de similitud semántica por `sentence-transformers` en `scripts/evaluate.py`, y probar el flujo completo con un LLM real (`LLM_PROVIDER=anthropic`).
-- Persona C: preparar la sustentación — correr `scripts/evaluate.py`, revisar `data/evaluation_results.csv` caso por caso, y armar la narrativa problema → prueba → control → métrica con los resultados reales.
+### Limitaciones que quedaron pendientes
+- No se detectan direcciones todavía, solo nombres, cédulas, teléfonos y correos. El dataset de prueba trae 3 casos de direcciones que hoy no se detectan.
+- La métrica de utilidad de la respuesta habría que volver a calcularla con un LLM real para que sea una medición exacta.
