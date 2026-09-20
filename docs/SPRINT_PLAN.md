@@ -1,8 +1,5 @@
 # Plan de trabajo — FDSI-GP-04 (2 sprints)
 
-## Contexto
-- El Hito 1 (Propuesta Estructurada) ya fue aprobado, el 05/09.
-- La propuesta dice que el proyecto debe estar listo antes del 26/09/2026.
 - La meta de estos dos sprints era tener algo que funcione de principio a fin, aunque no se alcanzaran a pulir todos los detalles. Mejor tener Unsecure y Secure funcionando con pruebas sólidas, que tener muchas pruebas a medias.
 
 ## Sprint 1 — Flujo Unsecure (línea base)
