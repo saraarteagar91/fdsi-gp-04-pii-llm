@@ -1,0 +1,130 @@
+{
+  "modelo": "TF-IDF (palabras 1-2 + caracteres 2-5) + LogisticRegression",
+  "ejemplos_entrenamiento": 374,
+  "intenciones": [
+    "actualizar_datos",
+    "agradecimiento",
+    "cambio_direccion",
+    "despedida",
+    "devoluciones",
+    "envios",
+    "estado_pedido",
+    "fuera_de_alcance",
+    "garantia",
+    "hablar_asesor",
+    "horario_atencion",
+    "metodos_pago",
+    "productos",
+    "resumen_conversacion",
+    "saludo"
+  ],
+  "exactitud_holdout_20pct": 0.84,
+  "exactitud_validacion_cruzada_5fold": 0.8449,
+  "desviacion_validacion_cruzada": 0.0134,
+  "segundos_entrenamiento": 4.15,
+  "reporte_por_intencion": {
+    "actualizar_datos": {
+      "precision": 0.9333333333333333,
+      "recall": 1.0,
+      "f1-score": 0.9655172413793104,
+      "support": 14.0
+    },
+    "agradecimiento": {
+      "precision": 1.0,
+      "recall": 0.5,
+      "f1-score": 0.6666666666666666,
+      "support": 2.0
+    },
+    "cambio_direccion": {
+      "precision": 0.9090909090909091,
+      "recall": 1.0,
+      "f1-score": 0.9523809523809523,
+      "support": 10.0
+    },
+    "despedida": {
+      "precision": 1.0,
+      "recall": 0.5,
+      "f1-score": 0.6666666666666666,
+      "support": 2.0
+    },
+    "devoluciones": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 3.0
+    },
+    "envios": {
+      "precision": 1.0,
+      "recall": 0.3333333333333333,
+      "f1-score": 0.5,
+      "support": 3.0
+    },
+    "estado_pedido": {
+      "precision": 0.8666666666666667,
+      "recall": 1.0,
+      "f1-score": 0.9285714285714286,
+      "support": 13.0
+    },
+    "fuera_de_alcance": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 3.0
+    },
+    "garantia": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 2.0
+    },
+    "hablar_asesor": {
+      "precision": 0.75,
+      "recall": 0.8571428571428571,
+      "f1-score": 0.8,
+      "support": 7.0
+    },
+    "horario_atencion": {
+      "precision": 0.3333333333333333,
+      "recall": 0.5,
+      "f1-score": 0.4,
+      "support": 2.0
+    },
+    "metodos_pago": {
+      "precision": 1.0,
+      "recall": 0.6666666666666666,
+      "f1-score": 0.8,
+      "support": 3.0
+    },
+    "productos": {
+      "precision": 0.5,
+      "recall": 1.0,
+      "f1-score": 0.6666666666666666,
+      "support": 2.0
+    },
+    "resumen_conversacion": {
+      "precision": 1.0,
+      "recall": 0.3333333333333333,
+      "f1-score": 0.5,
+      "support": 3.0
+    },
+    "saludo": {
+      "precision": 0.8571428571428571,
+      "recall": 1.0,
+      "f1-score": 0.9230769230769231,
+      "support": 6.0
+    },
+    "accuracy": 0.84,
+    "macro avg": {
+      "precision": 0.80997113997114,
+      "recall": 0.7126984126984126,
+      "f1-score": 0.7179697696939076,
+      "support": 75.0
+    },
+    "weighted avg": {
+      "precision": 0.8464502164502165,
+      "recall": 0.84,
+      "f1-score": 0.8193458801734664,
+      "support": 75.0
+    }
+  }
+}

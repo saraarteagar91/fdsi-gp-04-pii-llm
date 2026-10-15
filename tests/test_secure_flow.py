@@ -1,140 +1,88 @@
 """
-Pruebas del flujo Secure (Sprint 2) — versión automatizada de T01, T02 y T03.
-
-Se comparan directamente contra el comportamiento documentado en
-test_unsecure_flow.py: donde Unsecure deja pasar el PII, Secure debe
-bloquearlo en el log y en lo que efectivamente llega al LLM, pero seguir
-devolviendo una respuesta útil (con el dato real) al usuario legítimo.
+Pruebas del flujo Secure con servicios separados — T01, T02 y T03.
 """
 import json
-import os
 
 import pytest
-from fastapi.testclient import TestClient
 
-os.environ["LLM_PROVIDER"] = "mock"
-
-from app.main import app, secure_available  # noqa: E402
-from app.logging_config import _secure_log_path  # noqa: E402
-from app.pii import reid_store  # noqa: E402
-
-client = TestClient(app)
-
-pytestmark = pytest.mark.skipif(
-    not secure_available,
-    reason="Presidio/spaCy no están instalados en este entorno (usa requirements.txt en Python 3.11/3.12)",
-)
+from app.logging_config import _secure_log_path
 
 PII_MESSAGE = (
     "Mi nombre es Juan Carlos Pérez Gómez, cédula 1.020.304.050, "
     "correo juan.perez@gmail.com, celular 3001234567"
 )
+PII_VALUES = ("Juan Carlos Pérez Gómez", "1.020.304.050", "juan.perez@gmail.com", "3001234567")
 
 
 @pytest.fixture(autouse=True)
-def clean_state():
-    for path in [_secure_log_path(), reid_store._store_path()]:
-        if path.exists():
-            path.unlink()
+def clean_log():
+    if _secure_log_path().exists():
+        _secure_log_path().unlink()
     yield
 
 
-def test_secure_chat_returns_useful_response():
-    """La respuesta final al usuario legítimo debe seguir siendo útil:
-    debe contener el dato real (reidentificado), no el marcador."""
-    resp = client.post("/secure/chat", json={"user_id": "u1", "message": PII_MESSAGE})
-    assert resp.status_code == 200
-    body = resp.json()
-    assert "Juan Carlos Pérez Gómez" in body["response"]
-    assert "1.020.304.050" in body["response"]
-    assert "juan.perez@gmail.com" in body["response"]
-    assert set(body["entities_detected"]) == {
-        "PERSON",
-        "CEDULA_CO",
-        "EMAIL_ADDRESS",
-        "TELEFONO_CO",
-    }
+def test_secure_chat_returns_useful_response(client):
+    body = client.post("/secure/chat", json={"user_id": "u1", "message": PII_MESSAGE}).json()
+    for value in PII_VALUES:
+        assert value in body["response"]  # el usuario legítimo ve sus datos
+    assert set(body["entities_detected"]) == {"PERSON", "CEDULA_CO", "EMAIL_ADDRESS", "TELEFONO_CO"}
 
 
-def test_secure_llm_never_receives_raw_pii(monkeypatch):
-    """T01 (versión Secure): lo que efectivamente llega al 'LLM' no debe
-    contener ningún dato personal, solo marcadores."""
+def test_chatbot_never_receives_raw_pii(client, monkeypatch):
+    """T01: lo que efectivamente llega al servicio chatbot son marcadores."""
+    import chatbot.main
+
     captured = {}
+    original = chatbot.main.complete
 
-    from app.llm_client import llm_client
+    def spy(message, history):
+        captured["message"], captured["history"] = message, history
+        return original(message, history)
 
-    original_complete = llm_client.complete
-
-    def spy_complete(message: str) -> str:
-        captured["message_sent_to_llm"] = message
-        return original_complete(message)
-
-    monkeypatch.setattr(llm_client, "complete", spy_complete)
-
+    monkeypatch.setattr(chatbot.main, "complete", spy)
     client.post("/secure/chat", json={"user_id": "u1", "message": PII_MESSAGE})
-
-    sent = captured["message_sent_to_llm"]
-    assert "Juan Carlos Pérez Gómez" not in sent
-    assert "1.020.304.050" not in sent
-    assert "juan.perez@gmail.com" not in sent
-    assert "3001234567" not in sent
-    assert "[NOMBRE_1]" in sent
+    sent = json.dumps(captured, ensure_ascii=False)
+    for value in PII_VALUES:
+        assert value not in sent
+    assert "[NOMBRE_1]" in captured["message"]
 
 
-def test_secure_logs_never_contain_raw_pii():
-    """T02 (versión Secure): el log solo debe contener la versión
-    anonimizada, nunca el dato real."""
+def test_secure_logs_never_contain_raw_pii(client):
+    """T02: el log solo tiene la versión con marcadores."""
     client.post("/secure/chat", json={"user_id": "u1", "message": PII_MESSAGE})
-
-    log_path = _secure_log_path()
-    assert log_path.exists()
-
-    with open(log_path, "r", encoding="utf-8") as f:
+    with open(_secure_log_path(), encoding="utf-8") as f:
         lines = [json.loads(line) for line in f if line.strip()]
-
     assert len(lines) == 1
-    record = lines[0]
-    assert record["scenario"] == "secure"
-    full_record_text = json.dumps(record, ensure_ascii=False)
-    assert "Juan Carlos Pérez Gómez" not in full_record_text
-    assert "1.020.304.050" not in full_record_text
-    assert "juan.perez@gmail.com" not in full_record_text
-    assert "3001234567" not in full_record_text
-    assert "[NOMBRE_1]" in record["anonymized_message"]
+    text = json.dumps(lines[0], ensure_ascii=False)
+    for value in PII_VALUES:
+        assert value not in text
+    assert "[NOMBRE_1]" in lines[0]["anonymized_message"]
 
 
-def test_secure_reflection_leak_uses_tokens_not_real_pii():
-    """T03: si se le pide al asistente que repita el mensaje, el 'reflejo'
-    (lo que efectivamente pasó por el LLM y quedó en el log) debe usar los
-    marcadores, no el dato real — la fuga por reflejo queda contenida."""
-    resp = client.post("/secure/chat", json={"user_id": "u2", "message": PII_MESSAGE})
-    log_path = _secure_log_path()
-    with open(log_path, "r", encoding="utf-8") as f:
-        record = json.loads(f.readline())
-
-    # El mock hace eco del mensaje anonimizado -> el "reflejo" logueado
-    # debe tener el marcador, no el dato real.
-    assert "[NOMBRE_1]" in record["anonymized_response"]
-    assert "Juan Carlos Pérez Gómez" not in record["anonymized_response"]
-
-    # Pero el usuario legítimo sí recibe el dato real reidentificado.
-    assert "Juan Carlos Pérez Gómez" in resp.json()["response"]
+def test_reflection_uses_tokens_not_real_pii(client):
+    """T03: lo que el chatbot repite y lo que queda en el log son marcadores."""
+    resp = client.post("/secure/chat", json={"user_id": "u2", "message": PII_MESSAGE}).json()
+    assert "[NOMBRE_1]" in resp["audit"]["llm_output"]
+    assert "Juan Carlos Pérez Gómez" not in resp["audit"]["llm_output"]
+    assert "Juan Carlos Pérez Gómez" not in resp["audit"]["logged_response"]
+    assert "Juan Carlos Pérez Gómez" in resp["response"]
 
 
-def test_mapping_is_stored_encrypted_and_separately():
-    """El mapping token->PII debe existir en su propio archivo (separado
-    del log) y no debe ser legible como JSON plano (está cifrado)."""
+def test_vault_store_on_disk_is_encrypted(client):
+    from vault.store import get_store
+
     client.post("/secure/chat", json={"user_id": "u1", "message": PII_MESSAGE})
+    raw = get_store().path.read_text(encoding="utf-8")
+    for value in PII_VALUES:
+        assert value not in raw
+    assert "ciphertext" in raw
 
-    mapping_path = reid_store._store_path()
-    assert mapping_path.exists()
 
-    raw_content = mapping_path.read_text(encoding="utf-8")
-    assert "Juan Carlos Pérez Gómez" not in raw_content
-    assert "1.020.304.050" not in raw_content
-
-    record = json.loads(raw_content.splitlines()[0])
-    assert "ciphertext" in record
-
-    mapping = reid_store.load_mapping(record["request_id"])
-    assert any("Juan Carlos Pérez Gómez" in v for v in mapping.values())
+def test_tokens_are_consistent_across_the_conversation(client):
+    first = client.post("/secure/chat", json={"message": "Mi correo es juan.perez@gmail.com"}).json()
+    second = client.post("/secure/chat", json={
+        "message": "Repito: JUAN.PEREZ@GMAIL.COM y el de mi esposa ana@x.co",
+        "session_id": first["session_id"],
+    }).json()
+    assert "[CORREO_1]" in second["audit"]["llm_input"]
+    assert "[CORREO_2]" in second["audit"]["llm_input"]

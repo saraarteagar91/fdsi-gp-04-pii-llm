@@ -1,14 +1,94 @@
-version: "3.9"
+# Cuatro servicios, cada uno con SOLO lo que necesita (ver tests/test_isolation.py):
+#
+#   tienda    -> pública (puerto 8000). Usuarios, catálogo y pedidos (SQLite).
+#                Sin llaves de cifrado. Habla con los otros tres.
+#   guardian  -> red interna sin salida a internet, disco de solo lectura,
+#                solo la llave PÚBLICA. No puede descifrar.
+#   vault     -> red interna sin salida a internet. Única con la llave PRIVADA.
+#   chatbot   -> su propia red (con salida a internet solo por si se usa
+#                Claude/GPT). No alcanza ni al guardián ni a la bóveda.
+#
+# Antes del primer `docker compose up` hay que generar los secretos:
+#   python -m scripts.setup_secrets
+
+x-base: &base
+  build: .
+  image: fdsi-gp-04:latest
+  restart: unless-stopped
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
 
 services:
-  api:
-    build: .
-    container_name: fdsi-gp-04-api
+  tienda:
+    <<: *base
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
     ports:
       - "8000:8000"
+    env_file:
+      - secrets/env/app.env
+    environment:
+      APP_GUARDIAN_URL: http://guardian:8101
+      APP_VAULT_URL: http://vault:8102
+      APP_CHATBOT_URL: http://chatbot:8103
     volumes:
       - ./logs:/app/logs
-      - ./data:/app/data
+      - ./data/db:/app/data/db          # base de datos SQLite de la tienda
+    networks:
+      - red_publica
+      - red_guardian
+      - red_boveda
+      - red_chatbot
+    depends_on:
+      - guardian
+      - vault
+      - chatbot
+
+  guardian:
+    <<: *base
+    command: uvicorn guardian.main:app --host 0.0.0.0 --port 8101
+    read_only: true
+    tmpfs:
+      - /tmp
     env_file:
-      - .env
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+      - secrets/env/guardian.env
+    environment:
+      GUARDIAN_PUBLIC_KEY_PATH: /run/secrets/guardian/public.key
+      GUARDIAN_PEPPER_PATH: /run/secrets/guardian/pepper.key
+    volumes:
+      - ./secrets/guardian:/run/secrets/guardian:ro
+    networks:
+      - red_guardian
+
+  vault:
+    <<: *base
+    command: uvicorn vault.main:app --host 0.0.0.0 --port 8102
+    env_file:
+      - secrets/env/vault.env
+    environment:
+      VAULT_PRIVATE_KEY_PATH: /run/secrets/vault/private.key
+      VAULT_STORE_DIR: /app/data/vault
+    volumes:
+      - ./secrets/vault:/run/secrets/vault:ro
+      - ./data/vault:/app/data/vault
+    networks:
+      - red_boveda
+
+  chatbot:
+    <<: *base
+    command: uvicorn chatbot.main:app --host 0.0.0.0 --port 8103
+    env_file:
+      - secrets/env/chatbot.env
+      - path: .env
+        required: false
+    networks:
+      - red_chatbot
+
+networks:
+  red_publica: {}
+  red_chatbot: {}
+  red_guardian:
+    internal: true
+  red_boveda:
+    internal: true

@@ -5,15 +5,20 @@ __pycache__/
 .pytest_cache/
 .env
 
-# Logs y datos sensibles/efímeros generados en tiempo de ejecución — estos
-# SÍ deben quedar fuera del repo (la llave de cifrado nunca se sube, y los
-# logs crudos son solo de pruebas locales).
-logs/*.jsonl
-data/*.enc.jsonl
-data/.reid_key
+# SECRETOS: llaves y tokens de cada servicio. Nunca se suben al repositorio
+# (se generan con `python -m scripts.setup_secrets`).
+secrets/
 
-# OJO: data/evaluation_results.csv, evaluation_summary.json y
-# evaluation_metrics.png NO se ignoran a propósito — son la evidencia de
-# los resultados del Sprint 2 y conviene que queden versionados en el
-# repo para la entrega (corran `python -m scripts.evaluate` una vez más
-# antes de hacer commit para que queden con los datos más recientes).
+# Datos generados en tiempo de ejecución: logs de conversación y la bóveda
+# (datos cifrados + bitácora de accesos).
+logs/*.jsonl
+data/vault/
+data/db/
+data/*.enc.jsonl
+
+# El chatbot entrenado se regenera con `python -m scripts.train_bot` (o al
+# arrancar). El modelo guardián (models/guardian_ner/) SÍ se versiona.
+models/*.joblib
+
+# OJO: data/evaluation_*.{csv,json,png} y data/guardian_primera_medicion.json
+# NO se ignoran: son la evidencia de los resultados para la entrega.

@@ -1,0 +1,110 @@
+{
+  "modelo": "spaCy NER (tok2vec + transition-based parser), entrenado desde cero",
+  "datos": "100 % sintéticos (guardian/training/synth.py); ninguno de los conjuntos de evaluación",
+  "ejemplos_entrenamiento": 6000,
+  "ejemplos_validacion": 1000,
+  "epocas": 14,
+  "segundos_entrenamiento": 254.0,
+  "dev_precision": 0.9985,
+  "dev_recall": 0.9963,
+  "dev_f1": 0.9974,
+  "dev_por_etiqueta": {
+    "CEDULA": {
+      "p": 1.0,
+      "r": 1.0,
+      "f": 1.0
+    },
+    "NOMBRE": {
+      "p": 0.9951,
+      "r": 0.9878,
+      "f": 0.9914
+    },
+    "CORREO": {
+      "p": 1.0,
+      "r": 1.0,
+      "f": 1.0
+    },
+    "DIRECCION": {
+      "p": 1.0,
+      "r": 1.0,
+      "f": 1.0
+    },
+    "TELEFONO": {
+      "p": 1.0,
+      "r": 1.0,
+      "f": 1.0
+    }
+  },
+  "historial": [
+    {
+      "epoca": 1,
+      "perdida": 16062.4,
+      "f1_dev": 0.6175
+    },
+    {
+      "epoca": 2,
+      "perdida": 3414.21,
+      "f1_dev": 0.9601
+    },
+    {
+      "epoca": 3,
+      "perdida": 920.58,
+      "f1_dev": 0.9787
+    },
+    {
+      "epoca": 4,
+      "perdida": 495.56,
+      "f1_dev": 0.99
+    },
+    {
+      "epoca": 5,
+      "perdida": 224.93,
+      "f1_dev": 0.99
+    },
+    {
+      "epoca": 6,
+      "perdida": 158.39,
+      "f1_dev": 0.9922
+    },
+    {
+      "epoca": 7,
+      "perdida": 68.47,
+      "f1_dev": 0.9948
+    },
+    {
+      "epoca": 8,
+      "perdida": 100.72,
+      "f1_dev": 0.9963
+    },
+    {
+      "epoca": 9,
+      "perdida": 108.87,
+      "f1_dev": 0.9955
+    },
+    {
+      "epoca": 10,
+      "perdida": 47.79,
+      "f1_dev": 0.9955
+    },
+    {
+      "epoca": 11,
+      "perdida": 55.82,
+      "f1_dev": 0.9974
+    },
+    {
+      "epoca": 12,
+      "perdida": 31.99,
+      "f1_dev": 0.9952
+    },
+    {
+      "epoca": 13,
+      "perdida": 44.48,
+      "f1_dev": 0.9963
+    },
+    {
+      "epoca": 14,
+      "perdida": 26.81,
+      "f1_dev": 0.9974
+    }
+  ]
+}

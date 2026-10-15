@@ -1,57 +1,59 @@
-import logging
+"""
+TIENDA Andes Market (el monolito): página web, usuarios, catálogo, carrito,
+pedidos y logs, sobre una base de datos SQLite (app/db.py).
+
+No contiene ningún modelo de IA ni ninguna llave. Para el modo seguro
+coordina tres servicios externos por HTTP:
+  - guardian (detector entrenado + cifrado con llave pública)
+  - vault    (bóveda con la llave privada)
+  - chatbot  (Andi, el modelo conversacional)
+"""
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 
-from app.routers import unsecure
+from app import clients, db
+from app.routers import auth, demo, secure, store, unsecure
 
-logger = logging.getLogger("uvicorn.error")
-
-# El router Secure depende de spaCy/Presidio (requirements.txt completo),
-# que en versiones de Python muy nuevas (p. ej. 3.14) todavía no instalan.
-# Si no están disponibles, la app sigue funcionando solo con /unsecure/chat
-# en vez de fallar por completo al arrancar — así el Sprint 1 nunca se
-# rompe por trabajo del Sprint 2.
-secure_available = False
-try:
-    from app.routers import secure
-
-    secure_available = True
-except ImportError as exc:  # pragma: no cover - depende del entorno
-    logger.warning(
-        "No se pudo cargar /secure/chat (faltan dependencias de Presidio/spaCy: %s). "
-        "Instala requirements.txt en un entorno con Python 3.11/3.12 para habilitarlo.",
-        exc,
-    )
+STATIC_DIR = Path(__file__).resolve().parent.parent / "static"
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Precarga el modelo de spaCy/Presidio al arrancar, no en la primera
-    # petición — así la métrica de latencia añadida (Sprint 2) no queda
-    # inflada por la carga del modelo.
-    if secure_available:
-        from app.pii.engine import get_analyzer
-
-        get_analyzer()
+    db.conn()  # crea y llena la base de datos si está vacía
     yield
 
 
 app = FastAPI(
-    title="FDSI-GP-04 — Protección de datos personales enviados a un LLM",
-    description=(
-        "API de demostración con los escenarios Unsecure y Secure descritos "
-        "en la propuesta del Hito 1."
-    ),
-    version="0.2.0",
+    title="FDSI-GP-04 — Andes Market",
+    description="Tienda simulada con chatbot externo y los escenarios Unsecure y Secure de la propuesta.",
+    version="3.0.0",
     lifespan=lifespan,
 )
 
+app.include_router(auth.router)
+app.include_router(store.router)
 app.include_router(unsecure.router)
-if secure_available:
-    app.include_router(secure.router)
+app.include_router(secure.router)
+app.include_router(demo.router)
+
+
+@app.middleware("http")
+async def no_cache(request, call_next):
+    # la página cambia con cada versión del proyecto: que el navegador
+    # siempre revalide en vez de mostrar una copia vieja durante la demo
+    response = await call_next(request)
+    response.headers["Cache-Control"] = "no-cache"
+    return response
 
 
 @app.get("/health")
 def health() -> dict:
-    return {"status": "ok", "secure_available": secure_available}
+    return {"status": "ok", "servicios": {s: "error" not in clients.health(s) for s in ("guardian", "vault", "chatbot")}}
+
+
+# La página web (al final para no tapar la API).
+if STATIC_DIR.exists():
+    app.mount("/", StaticFiles(directory=STATIC_DIR, html=True), name="web")

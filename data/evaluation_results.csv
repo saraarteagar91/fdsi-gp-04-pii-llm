@@ -1,0 +1,241 @@
+id,modo,entity_type,format_variant,detectado,acierto,payload,conjunto
+1,modelo,NOMBRE,nombre completo estándar,NOMBRE,True,"Hola, mi nombre es [NOMBRE_X] y quiero saber el estado de mi trámite.",principal
+2,modelo,NOMBRE,mayúsculas sostenidas,NOMBRE,True,"Soy [NOMBRE_X], necesito actualizar mis datos.",principal
+3,modelo,NOMBRE,nombre con tilde,NOMBRE,True,"Habla [NOMBRE_X], ¿me pueden confirmar mi cita?",principal
+4,modelo,CEDULA,con puntos de miles,CEDULA,True,"Mi número de cédula es [CEDULA_X], ¿pueden verificar mi registro?",principal
+5,modelo,CEDULA,"sin separadores, con prefijo CC",CEDULA,True,CC [CEDULA_X] para validar identidad por favor.,principal
+6,modelo,CEDULA,con comas estilo inglés,CEDULA,True,Mi documento es C.C. [CEDULA_X],principal
+7,modelo,CEDULA,"minúscula sin tilde, con puntos",CEDULA,True,cedula: [CEDULA_X],principal
+8,modelo,CEDULA,con guiones,CEDULA,True,Documento de identidad No. [CEDULA_X],principal
+9,modelo,TELEFONO,con indicativo país y espacios,TELEFONO,True,Pueden llamarme al [TELEFONO_X] en cualquier momento.,principal
+10,modelo,TELEFONO,sin espacios ni indicativo,TELEFONO,True,Mi celular es [TELEFONO_X],principal
+11,modelo,TELEFONO,con guiones,TELEFONO,True,Contáctenme al [TELEFONO_X] después de las 5pm.,principal
+12,modelo,TELEFONO,con paréntesis,TELEFONO,True,Tel: [TELEFONO_X],principal
+13,modelo,TELEFONO,fijo Bogotá con indicativo de área,TELEFONO,True,Línea fija: [TELEFONO_X],principal
+14,modelo,TELEFONO,"minúscula, sin separadores",TELEFONO,True,whatsapp [TELEFONO_X] para enviarme la factura,principal
+15,modelo,CORREO,minúsculas estándar,CORREO,True,Mi correo es [CORREO_X] para el envío del certificado.,principal
+16,modelo,CORREO,"mayúsculas, dominio corporativo .com.co",CORREO,True,Escríbanme a [CORREO_X] por favor,principal
+17,modelo,CORREO,con guion bajo y números,CORREO,True,correo: [CORREO_X],principal
+18,modelo,CORREO,con símbolo + (alias),CORREO,True,Mi email es [CORREO_X],principal
+19,modelo,DIRECCION,dirección urbana estándar,DIRECCION,True,"Vivo en la [DIRECCION_X], y necesito que me envíen el paquete ahí.",principal
+20,modelo,DIRECCION,abreviada con apartamento,DIRECCION,True,Dirección: [DIRECCION_X],principal
+21,modelo,DIRECCION,con diagonal y sur,DIRECCION,True,Envíenlo a la [DIRECCION_X],principal
+22,modelo,NINGUNO,control: sin PII (para medir falsos positivos),,True,"Buenas, tengo una pregunta sobre el clima de mañana en Bogotá.",principal
+23,modelo,NINGUNO,control: sin PII,,True,¿Cuál es el horario de atención de la oficina principal?,principal
+24,modelo,NINGUNO,control: parece ID pero no es PII personal,,True,El número de radicado de mi solicitud es RAD-2026-004532.,principal
+25,modelo,NOMBRE;CEDULA;CORREO;TELEFONO,mensaje con 4 entidades combinadas,NOMBRE;CEDULA;CORREO;TELEFONO,True,"[NOMBRE_X], cédula [CEDULA_X], correo [CORREO_X], tel [TELEFONO_X]",principal
+26,modelo,CORREO,dominio educativo,CORREO;NOMBRE,True,Necesito cambiar el correo asociado a mi cuenta de [CORREO_X] a [NOMBRE_X].,principal
+27,modelo,TELEFONO,con puntos como separador,TELEFONO;NOMBRE,True,"Mi tel es [TELEFONO_X] (con puntos, [NOMBRE_X]",principal
+28,modelo,NOMBRE,nombre abreviado con iniciales,NOMBRE,True,Nombre: [NOMBRE_X],principal
+29,modelo,DIRECCION,carrera completa con No.,DIRECCION,True,Mi dirección es [DIRECCION_X],principal
+30,modelo,DIRECCION,avenida con nombre y letra,DIRECCION,True,Envíen el pedido a [DIRECCION_X],principal
+31,modelo,DIRECCION,"sin símbolo #, con complemento",DIRECCION,True,Vivo en la [DIRECCION_X],principal
+32,modelo,DIRECCION,minúsculas,DIRECCION,True,mi casa queda en la [DIRECCION_X],principal
+33,modelo,NOMBRE,nombre en minúsculas con contexto,NOMBRE,True,me llamo [NOMBRE_X] y quiero cambiar mi clave,principal
+34,modelo,NOMBRE,nombre sin prefijo directo,NOMBRE,True,Soy el cliente [NOMBRE_X] y no me ha llegado nada,principal
+35,modelo,CEDULA;CEDULA,"dos cédulas, una sin prefijo",CEDULA;TELEFONO,False,Mi cédula es [CEDULA_X] y la de mi esposa [TELEFONO_X],principal
+36,modelo,TELEFONO;CORREO,teléfono y correo juntos,TELEFONO;CORREO,True,Llámame al [TELEFONO_X] o escríbeme a [CORREO_X],principal
+37,modelo,TELEFONO,indicativo pegado,TELEFONO,True,[TELEFONO_X] es mi whatsapp,principal
+38,modelo,CORREO,correo ofuscado,CORREO,True,Mi correo es [CORREO_X],principal
+39,modelo,NINGUNO,control: sin PII,NOMBRE,False,Quiero devolver unos audífonos que compré la [NOMBRE_X].,principal
+40,modelo,NINGUNO,control: cifra con punto de miles,,True,¿Tienen envío gratis para compras mayores a 150.000 pesos?,principal
+41,modelo,NINGUNO,control: número de pedido (no es PII),,True,El pedido AM-10231 llegó con la caja dañada.,principal
+42,modelo,NINGUNO,control: ciudad,,True,¿Cuánto cuesta el envío a Medellín?,principal
+43,modelo,NINGUNO,control: fecha,,True,Necesito la factura electrónica de la compra del 12 de octubre.,principal
+44,modelo,NINGUNO,control: sigla en mayúsculas,,True,¿Aceptan pagos con PSE y tarjeta de crédito?,principal
+45,modelo,NINGUNO,control: precio,,True,Mi pedido tiene 3 unidades y pagué 89.900 pesos.,principal
+46,modelo,NINGUNO,control: saludo,,True,"Hola, buenas tardes, ¿cómo están?",principal
+47,modelo,NINGUNO,control: referencia numérica con guiones,,True,La referencia del producto es SKU 4455-221-889.,principal
+48,modelo,NINGUNO,control: sin PII,,True,Quiero hablar con un asesor humano por favor.,principal
+49,modelo,NINGUNO,control: frase en mayúsculas,,True,GRACIAS POR LA ATENCIÓN,principal
+50,modelo,NINGUNO,control: vía sin número de placa,,True,¿Hacen entregas en la Calle Real del centro?,principal
+H1,modelo,NOMBRE,nombre tras 'les escribe',NOMBRE,True,"Buenas noches, les escribe [NOMBRE_X], tengo un problema con mi factura",holdout
+H2,modelo,NOMBRE,nombre completo con dos puntos,NOMBRE,True,Mi nombre completo: [NOMBRE_X],holdout
+H3,modelo,NOMBRE,firma al final,NOMBRE,True,"atentamente, [NOMBRE_X]",holdout
+H4,modelo,NOMBRE,"mayúsculas, dos palabras",NOMBRE,True,Soy [NOMBRE_X] y no puedo entrar a mi cuenta,holdout
+H5,modelo,NOMBRE,nombre de tercero,NOMBRE,True,La titular de la cuenta es la señora [NOMBRE_X],holdout
+H6,modelo,CEDULA,prefijo c.c. en minúscula,CEDULA,True,mi c.c. es [CEDULA_X],holdout
+H7,modelo,CEDULA,con espacios,CEDULA,True,Número de documento: [CEDULA_X],holdout
+H8,modelo,CEDULA,prefijo 'identificación',CEDULA,True,identificación [CEDULA_X] por favor revisen,holdout
+H9,modelo,CEDULA,cédula de ciudadanía completa,CEDULA,True,Cédula de ciudadanía [CEDULA_X] expedida en Bogotá,holdout
+H10,modelo,TELEFONO,celular con espacios,TELEFONO,True,Mi número es [TELEFONO_X],holdout
+H11,modelo,TELEFONO,separadores irregulares,TELEFONO,True,cel: [TELEFONO_X],holdout
+H12,modelo,TELEFONO,fijo con paréntesis,TELEFONO,True,Llamar al [TELEFONO_X] ext 12,holdout
+H13,modelo,TELEFONO,indicativo y paréntesis,TELEFONO,True,WhatsApp [TELEFONO_X],holdout
+H14,modelo,CORREO,dominio universitario,CORREO,True,mándenme la info a [CORREO_X],holdout
+H15,modelo,CORREO,dominio .es,CORREO,True,correo personal: [CORREO_X],holdout
+H16,modelo,CORREO,correo dictado en palabras,CORREO,True,escríbanme a [CORREO_X],holdout
+H17,modelo,DIRECCION,con oficina,DIRECCION,True,Pueden recogerlo en la [DIRECCION_X],holdout
+H18,modelo,DIRECCION,carrera con letras,DIRECCION,True,Vivo en [DIRECCION_X],holdout
+H19,modelo,DIRECCION,avenida calle con torre,DIRECCION,True,mi dirección es [DIRECCION_X],holdout
+H20,modelo,DIRECCION,dirección rural,,False,"Entregar en la vereda El Rosal, finca La Esperanza",holdout
+H21,modelo,NOMBRE;CEDULA;TELEFONO;CORREO,cuatro datos seguidos,NOMBRE;CEDULA;TELEFONO;CORREO,True,"[NOMBRE_X], CC [CEDULA_X], [TELEFONO_X], [CORREO_X]",holdout
+H22,modelo,NINGUNO,control: producto,,True,¿Tienen el iPhone 15 en color negro?,holdout
+H23,modelo,NINGUNO,control: cifras y fecha,,True,Compré 2 licuadoras por 439.800 pesos el 3 de octubre,holdout
+H24,modelo,NINGUNO,control: código en mayúsculas,,True,El código de descuento ANDES30 no funciona,holdout
+H25,modelo,NINGUNO,control: ciudad compuesta,,True,¿El envío a Santa Marta cuesta lo mismo?,holdout
+H26,modelo,NINGUNO,control: números sueltos,,True,"Mi pedido llegó incompleto, faltó 1 de 3 cajas",holdout
+H27,modelo,NINGUNO,control: marcas,,True,¿Puedo pagar con tarjeta Visa o Mastercard?,holdout
+H28,modelo,NINGUNO,control: rangos con guion,,True,El horario de 8-12 y 2-6 me sirve,holdout
+H29,modelo,NINGUNO,control: frase capitalizada,,True,Quiero hablar con Servicio Al Cliente,holdout
+H30,modelo,NINGUNO,control: palabra calle sin dirección,,True,La calle principal del barrio está cerrada,holdout
+1,reglas,NOMBRE,nombre completo estándar,NOMBRE,True,"Hola, mi nombre es [NOMBRE_X] y quiero saber el estado de mi trámite.",principal
+2,reglas,NOMBRE,mayúsculas sostenidas,NOMBRE,True,"Soy [NOMBRE_X], necesito actualizar mis datos.",principal
+3,reglas,NOMBRE,nombre con tilde,NOMBRE,True,"Habla [NOMBRE_X], ¿me pueden confirmar mi cita?",principal
+4,reglas,CEDULA,con puntos de miles,CEDULA,True,"Mi número de cédula es [CEDULA_X], ¿pueden verificar mi registro?",principal
+5,reglas,CEDULA,"sin separadores, con prefijo CC",CEDULA,True,CC [CEDULA_X] para validar identidad por favor.,principal
+6,reglas,CEDULA,con comas estilo inglés,CEDULA,True,Mi documento es C.C. [CEDULA_X],principal
+7,reglas,CEDULA,"minúscula sin tilde, con puntos",CEDULA,True,cedula: [CEDULA_X],principal
+8,reglas,CEDULA,con guiones,CEDULA,True,Documento de identidad No. [CEDULA_X],principal
+9,reglas,TELEFONO,con indicativo país y espacios,TELEFONO,True,Pueden llamarme al [TELEFONO_X] en cualquier momento.,principal
+10,reglas,TELEFONO,sin espacios ni indicativo,TELEFONO,True,Mi celular es [TELEFONO_X],principal
+11,reglas,TELEFONO,con guiones,TELEFONO,True,Contáctenme al [TELEFONO_X] después de las 5pm.,principal
+12,reglas,TELEFONO,con paréntesis,TELEFONO,True,Tel: [TELEFONO_X],principal
+13,reglas,TELEFONO,fijo Bogotá con indicativo de área,TELEFONO,True,Línea fija: [TELEFONO_X],principal
+14,reglas,TELEFONO,"minúscula, sin separadores",TELEFONO,True,whatsapp [TELEFONO_X] para enviarme la factura,principal
+15,reglas,CORREO,minúsculas estándar,CORREO,True,Mi correo es [CORREO_X] para el envío del certificado.,principal
+16,reglas,CORREO,"mayúsculas, dominio corporativo .com.co",CORREO,True,Escríbanme a [CORREO_X] por favor,principal
+17,reglas,CORREO,con guion bajo y números,CORREO,True,correo: [CORREO_X],principal
+18,reglas,CORREO,con símbolo + (alias),CORREO,True,Mi email es [CORREO_X],principal
+19,reglas,DIRECCION,dirección urbana estándar,DIRECCION,True,"Vivo en la [DIRECCION_X], y necesito que me envíen el paquete ahí.",principal
+20,reglas,DIRECCION,abreviada con apartamento,DIRECCION,True,Dirección: [DIRECCION_X],principal
+21,reglas,DIRECCION,con diagonal y sur,DIRECCION,True,Envíenlo a la [DIRECCION_X],principal
+22,reglas,NINGUNO,control: sin PII (para medir falsos positivos),,True,"Buenas, tengo una pregunta sobre el clima de mañana en Bogotá.",principal
+23,reglas,NINGUNO,control: sin PII,,True,¿Cuál es el horario de atención de la oficina principal?,principal
+24,reglas,NINGUNO,control: parece ID pero no es PII personal,,True,El número de radicado de mi solicitud es RAD-2026-004532.,principal
+25,reglas,NOMBRE;CEDULA;CORREO;TELEFONO,mensaje con 4 entidades combinadas,CEDULA;CORREO;TELEFONO,False,"Sara Viviana Arteaga Rodríguez, cédula [CEDULA_X], correo [CORREO_X], tel [TELEFONO_X]",principal
+26,reglas,CORREO,dominio educativo,CORREO,True,Necesito cambiar el correo asociado a mi cuenta de [CORREO_X] a otro nuevo.,principal
+27,reglas,TELEFONO,con puntos como separador,TELEFONO,True,"Mi tel es [TELEFONO_X] (con puntos, formato raro)",principal
+28,reglas,NOMBRE,nombre abreviado con iniciales,NOMBRE,True,Nombre: [NOMBRE_X],principal
+29,reglas,DIRECCION,carrera completa con No.,DIRECCION,True,Mi dirección es [DIRECCION_X],principal
+30,reglas,DIRECCION,avenida con nombre y letra,DIRECCION,True,Envíen el pedido a [DIRECCION_X],principal
+31,reglas,DIRECCION,"sin símbolo #, con complemento",DIRECCION,True,Vivo en la [DIRECCION_X],principal
+32,reglas,DIRECCION,minúsculas,DIRECCION,True,mi casa queda en la [DIRECCION_X] en Cali,principal
+33,reglas,NOMBRE,nombre en minúsculas con contexto,NOMBRE,True,me llamo [NOMBRE_X] y quiero cambiar mi clave,principal
+34,reglas,NOMBRE,nombre sin prefijo directo,,False,Soy el cliente Pedro Antonio Ruiz y no me ha llegado nada,principal
+35,reglas,CEDULA;CEDULA,"dos cédulas, una sin prefijo",CEDULA;CEDULA,True,Mi cédula es [CEDULA_X] y la de mi esposa [CEDULA_X],principal
+36,reglas,TELEFONO;CORREO,teléfono y correo juntos,TELEFONO;CORREO,True,Llámame al [TELEFONO_X] o escríbeme a [CORREO_X],principal
+37,reglas,TELEFONO,indicativo pegado,TELEFONO,True,[TELEFONO_X] es mi whatsapp,principal
+38,reglas,CORREO,correo ofuscado,CORREO,True,Mi correo es [CORREO_X],principal
+39,reglas,NINGUNO,control: sin PII,,True,Quiero devolver unos audífonos que compré la semana pasada.,principal
+40,reglas,NINGUNO,control: cifra con punto de miles,,True,¿Tienen envío gratis para compras mayores a 150.000 pesos?,principal
+41,reglas,NINGUNO,control: número de pedido (no es PII),,True,El pedido AM-10231 llegó con la caja dañada.,principal
+42,reglas,NINGUNO,control: ciudad,,True,¿Cuánto cuesta el envío a Medellín?,principal
+43,reglas,NINGUNO,control: fecha,,True,Necesito la factura electrónica de la compra del 12 de octubre.,principal
+44,reglas,NINGUNO,control: sigla en mayúsculas,,True,¿Aceptan pagos con PSE y tarjeta de crédito?,principal
+45,reglas,NINGUNO,control: precio,,True,Mi pedido tiene 3 unidades y pagué 89.900 pesos.,principal
+46,reglas,NINGUNO,control: saludo,,True,"Hola, buenas tardes, ¿cómo están?",principal
+47,reglas,NINGUNO,control: referencia numérica con guiones,,True,La referencia del producto es SKU 4455-221-889.,principal
+48,reglas,NINGUNO,control: sin PII,,True,Quiero hablar con un asesor humano por favor.,principal
+49,reglas,NINGUNO,control: frase en mayúsculas,,True,GRACIAS POR LA ATENCIÓN,principal
+50,reglas,NINGUNO,control: vía sin número de placa,,True,¿Hacen entregas en la Calle Real del centro?,principal
+H1,reglas,NOMBRE,nombre tras 'les escribe',,False,"Buenas noches, les escribe Carolina Restrepo Henao, tengo un problema con mi factura",holdout
+H2,reglas,NOMBRE,nombre completo con dos puntos,NOMBRE,True,Mi nombre completo: [NOMBRE_X],holdout
+H3,reglas,NOMBRE,firma al final,,False,"atentamente, Diana Patricia Moreno",holdout
+H4,reglas,NOMBRE,"mayúsculas, dos palabras",NOMBRE,True,Soy [NOMBRE_X] y no puedo entrar a mi cuenta,holdout
+H5,reglas,NOMBRE,nombre de tercero,,False,La titular de la cuenta es la señora Gloria Inés Cárdenas,holdout
+H6,reglas,CEDULA,prefijo c.c. en minúscula,CEDULA,True,mi c.c. es [CEDULA_X],holdout
+H7,reglas,CEDULA,con espacios,CEDULA,True,Número de documento: [CEDULA_X],holdout
+H8,reglas,CEDULA,prefijo 'identificación',CEDULA,True,identificación [CEDULA_X] por favor revisen,holdout
+H9,reglas,CEDULA,cédula de ciudadanía completa,CEDULA,True,Cédula de ciudadanía [CEDULA_X] expedida en Bogotá,holdout
+H10,reglas,TELEFONO,celular con espacios,TELEFONO,True,Mi número es [TELEFONO_X],holdout
+H11,reglas,TELEFONO,separadores irregulares,,False,cel: 3-15-678-9012,holdout
+H12,reglas,TELEFONO,fijo con paréntesis,TELEFONO,True,Llamar al [TELEFONO_X] ext 12,holdout
+H13,reglas,TELEFONO,indicativo y paréntesis,TELEFONO,True,WhatsApp [TELEFONO_X],holdout
+H14,reglas,CORREO,dominio universitario,CORREO,True,mándenme la info a [CORREO_X],holdout
+H15,reglas,CORREO,dominio .es,CORREO,True,correo personal: [CORREO_X],holdout
+H16,reglas,CORREO,correo dictado en palabras,CORREO,True,escríbanme a [CORREO_X],holdout
+H17,reglas,DIRECCION,con oficina,DIRECCION,True,Pueden recogerlo en la [DIRECCION_X],holdout
+H18,reglas,DIRECCION,carrera con letras,DIRECCION,True,Vivo en [DIRECCION_X],holdout
+H19,reglas,DIRECCION,avenida calle con torre,DIRECCION,True,mi dirección es [DIRECCION_X],holdout
+H20,reglas,DIRECCION,dirección rural,,False,"Entregar en la vereda El Rosal, finca La Esperanza",holdout
+H21,reglas,NOMBRE;CEDULA;TELEFONO;CORREO,cuatro datos seguidos,CEDULA;TELEFONO;CORREO,False,"Diana Moreno, CC [CEDULA_X], [TELEFONO_X], [CORREO_X]",holdout
+H22,reglas,NINGUNO,control: producto,,True,¿Tienen el iPhone 15 en color negro?,holdout
+H23,reglas,NINGUNO,control: cifras y fecha,,True,Compré 2 licuadoras por 439.800 pesos el 3 de octubre,holdout
+H24,reglas,NINGUNO,control: código en mayúsculas,,True,El código de descuento ANDES30 no funciona,holdout
+H25,reglas,NINGUNO,control: ciudad compuesta,,True,¿El envío a Santa Marta cuesta lo mismo?,holdout
+H26,reglas,NINGUNO,control: números sueltos,,True,"Mi pedido llegó incompleto, faltó 1 de 3 cajas",holdout
+H27,reglas,NINGUNO,control: marcas,,True,¿Puedo pagar con tarjeta Visa o Mastercard?,holdout
+H28,reglas,NINGUNO,control: rangos con guion,,True,El horario de 8-12 y 2-6 me sirve,holdout
+H29,reglas,NINGUNO,control: frase capitalizada,,True,Quiero hablar con Servicio Al Cliente,holdout
+H30,reglas,NINGUNO,control: palabra calle sin dirección,,True,La calle principal del barrio está cerrada,holdout
+1,hibrido,NOMBRE,nombre completo estándar,NOMBRE,True,"Hola, mi nombre es [NOMBRE_X] y quiero saber el estado de mi trámite.",principal
+2,hibrido,NOMBRE,mayúsculas sostenidas,NOMBRE,True,"Soy [NOMBRE_X], necesito actualizar mis datos.",principal
+3,hibrido,NOMBRE,nombre con tilde,NOMBRE,True,"Habla [NOMBRE_X], ¿me pueden confirmar mi cita?",principal
+4,hibrido,CEDULA,con puntos de miles,CEDULA,True,"Mi número de cédula es [CEDULA_X], ¿pueden verificar mi registro?",principal
+5,hibrido,CEDULA,"sin separadores, con prefijo CC",CEDULA,True,CC [CEDULA_X] para validar identidad por favor.,principal
+6,hibrido,CEDULA,con comas estilo inglés,CEDULA,True,Mi documento es C.C. [CEDULA_X],principal
+7,hibrido,CEDULA,"minúscula sin tilde, con puntos",CEDULA,True,cedula: [CEDULA_X],principal
+8,hibrido,CEDULA,con guiones,CEDULA,True,Documento de identidad No. [CEDULA_X],principal
+9,hibrido,TELEFONO,con indicativo país y espacios,TELEFONO,True,Pueden llamarme al [TELEFONO_X] en cualquier momento.,principal
+10,hibrido,TELEFONO,sin espacios ni indicativo,TELEFONO,True,Mi celular es [TELEFONO_X],principal
+11,hibrido,TELEFONO,con guiones,TELEFONO,True,Contáctenme al [TELEFONO_X] después de las 5pm.,principal
+12,hibrido,TELEFONO,con paréntesis,TELEFONO,True,Tel: [TELEFONO_X],principal
+13,hibrido,TELEFONO,fijo Bogotá con indicativo de área,TELEFONO,True,Línea fija: [TELEFONO_X],principal
+14,hibrido,TELEFONO,"minúscula, sin separadores",TELEFONO,True,whatsapp [TELEFONO_X] para enviarme la factura,principal
+15,hibrido,CORREO,minúsculas estándar,CORREO,True,Mi correo es [CORREO_X] para el envío del certificado.,principal
+16,hibrido,CORREO,"mayúsculas, dominio corporativo .com.co",CORREO,True,Escríbanme a [CORREO_X] por favor,principal
+17,hibrido,CORREO,con guion bajo y números,CORREO,True,correo: [CORREO_X],principal
+18,hibrido,CORREO,con símbolo + (alias),CORREO,True,Mi email es [CORREO_X],principal
+19,hibrido,DIRECCION,dirección urbana estándar,DIRECCION,True,"Vivo en la [DIRECCION_X], y necesito que me envíen el paquete ahí.",principal
+20,hibrido,DIRECCION,abreviada con apartamento,DIRECCION,True,Dirección: [DIRECCION_X],principal
+21,hibrido,DIRECCION,con diagonal y sur,DIRECCION,True,Envíenlo a la [DIRECCION_X],principal
+22,hibrido,NINGUNO,control: sin PII (para medir falsos positivos),,True,"Buenas, tengo una pregunta sobre el clima de mañana en Bogotá.",principal
+23,hibrido,NINGUNO,control: sin PII,,True,¿Cuál es el horario de atención de la oficina principal?,principal
+24,hibrido,NINGUNO,control: parece ID pero no es PII personal,,True,El número de radicado de mi solicitud es RAD-2026-004532.,principal
+25,hibrido,NOMBRE;CEDULA;CORREO;TELEFONO,mensaje con 4 entidades combinadas,NOMBRE;CEDULA;CORREO;TELEFONO,True,"[NOMBRE_X], cédula [CEDULA_X], correo [CORREO_X], tel [TELEFONO_X]",principal
+26,hibrido,CORREO,dominio educativo,CORREO,True,Necesito cambiar el correo asociado a mi cuenta de [CORREO_X] a otro nuevo.,principal
+27,hibrido,TELEFONO,con puntos como separador,TELEFONO,True,"Mi tel es [TELEFONO_X] (con puntos, formato raro)",principal
+28,hibrido,NOMBRE,nombre abreviado con iniciales,NOMBRE,True,Nombre: [NOMBRE_X],principal
+29,hibrido,DIRECCION,carrera completa con No.,DIRECCION,True,Mi dirección es [DIRECCION_X],principal
+30,hibrido,DIRECCION,avenida con nombre y letra,DIRECCION,True,Envíen el pedido a [DIRECCION_X],principal
+31,hibrido,DIRECCION,"sin símbolo #, con complemento",DIRECCION,True,Vivo en la [DIRECCION_X],principal
+32,hibrido,DIRECCION,minúsculas,DIRECCION,True,mi casa queda en la [DIRECCION_X],principal
+33,hibrido,NOMBRE,nombre en minúsculas con contexto,NOMBRE,True,me llamo [NOMBRE_X] y quiero cambiar mi clave,principal
+34,hibrido,NOMBRE,nombre sin prefijo directo,NOMBRE,True,Soy el cliente [NOMBRE_X] y no me ha llegado nada,principal
+35,hibrido,CEDULA;CEDULA,"dos cédulas, una sin prefijo",CEDULA;CEDULA,True,Mi cédula es [CEDULA_X] y la de mi esposa [CEDULA_X],principal
+36,hibrido,TELEFONO;CORREO,teléfono y correo juntos,TELEFONO;CORREO,True,Llámame al [TELEFONO_X] o escríbeme a [CORREO_X],principal
+37,hibrido,TELEFONO,indicativo pegado,TELEFONO,True,[TELEFONO_X] es mi whatsapp,principal
+38,hibrido,CORREO,correo ofuscado,CORREO,True,Mi correo es [CORREO_X],principal
+39,hibrido,NINGUNO,control: sin PII,,True,Quiero devolver unos audífonos que compré la semana pasada.,principal
+40,hibrido,NINGUNO,control: cifra con punto de miles,,True,¿Tienen envío gratis para compras mayores a 150.000 pesos?,principal
+41,hibrido,NINGUNO,control: número de pedido (no es PII),,True,El pedido AM-10231 llegó con la caja dañada.,principal
+42,hibrido,NINGUNO,control: ciudad,,True,¿Cuánto cuesta el envío a Medellín?,principal
+43,hibrido,NINGUNO,control: fecha,,True,Necesito la factura electrónica de la compra del 12 de octubre.,principal
+44,hibrido,NINGUNO,control: sigla en mayúsculas,,True,¿Aceptan pagos con PSE y tarjeta de crédito?,principal
+45,hibrido,NINGUNO,control: precio,,True,Mi pedido tiene 3 unidades y pagué 89.900 pesos.,principal
+46,hibrido,NINGUNO,control: saludo,,True,"Hola, buenas tardes, ¿cómo están?",principal
+47,hibrido,NINGUNO,control: referencia numérica con guiones,,True,La referencia del producto es SKU 4455-221-889.,principal
+48,hibrido,NINGUNO,control: sin PII,,True,Quiero hablar con un asesor humano por favor.,principal
+49,hibrido,NINGUNO,control: frase en mayúsculas,,True,GRACIAS POR LA ATENCIÓN,principal
+50,hibrido,NINGUNO,control: vía sin número de placa,,True,¿Hacen entregas en la Calle Real del centro?,principal
+H1,hibrido,NOMBRE,nombre tras 'les escribe',NOMBRE,True,"Buenas noches, les escribe [NOMBRE_X], tengo un problema con mi factura",holdout
+H2,hibrido,NOMBRE,nombre completo con dos puntos,NOMBRE,True,Mi nombre completo: [NOMBRE_X],holdout
+H3,hibrido,NOMBRE,firma al final,NOMBRE,True,"atentamente, [NOMBRE_X]",holdout
+H4,hibrido,NOMBRE,"mayúsculas, dos palabras",NOMBRE,True,Soy [NOMBRE_X] y no puedo entrar a mi cuenta,holdout
+H5,hibrido,NOMBRE,nombre de tercero,NOMBRE,True,La titular de la cuenta es la señora [NOMBRE_X],holdout
+H6,hibrido,CEDULA,prefijo c.c. en minúscula,CEDULA,True,mi c.c. es [CEDULA_X],holdout
+H7,hibrido,CEDULA,con espacios,CEDULA,True,Número de documento: [CEDULA_X],holdout
+H8,hibrido,CEDULA,prefijo 'identificación',CEDULA,True,identificación [CEDULA_X] por favor revisen,holdout
+H9,hibrido,CEDULA,cédula de ciudadanía completa,CEDULA,True,Cédula de ciudadanía [CEDULA_X] expedida en Bogotá,holdout
+H10,hibrido,TELEFONO,celular con espacios,TELEFONO,True,Mi número es [TELEFONO_X],holdout
+H11,hibrido,TELEFONO,separadores irregulares,TELEFONO,True,cel: [TELEFONO_X],holdout
+H12,hibrido,TELEFONO,fijo con paréntesis,TELEFONO,True,Llamar al [TELEFONO_X] ext 12,holdout
+H13,hibrido,TELEFONO,indicativo y paréntesis,TELEFONO,True,WhatsApp [TELEFONO_X],holdout
+H14,hibrido,CORREO,dominio universitario,CORREO,True,mándenme la info a [CORREO_X],holdout
+H15,hibrido,CORREO,dominio .es,CORREO,True,correo personal: [CORREO_X],holdout
+H16,hibrido,CORREO,correo dictado en palabras,CORREO,True,escríbanme a [CORREO_X],holdout
+H17,hibrido,DIRECCION,con oficina,DIRECCION,True,Pueden recogerlo en la [DIRECCION_X],holdout
+H18,hibrido,DIRECCION,carrera con letras,DIRECCION,True,Vivo en [DIRECCION_X],holdout
+H19,hibrido,DIRECCION,avenida calle con torre,DIRECCION,True,mi dirección es [DIRECCION_X],holdout
+H20,hibrido,DIRECCION,dirección rural,,False,"Entregar en la vereda El Rosal, finca La Esperanza",holdout
+H21,hibrido,NOMBRE;CEDULA;TELEFONO;CORREO,cuatro datos seguidos,NOMBRE;CEDULA;TELEFONO;CORREO,True,"[NOMBRE_X], CC [CEDULA_X], [TELEFONO_X], [CORREO_X]",holdout
+H22,hibrido,NINGUNO,control: producto,,True,¿Tienen el iPhone 15 en color negro?,holdout
+H23,hibrido,NINGUNO,control: cifras y fecha,,True,Compré 2 licuadoras por 439.800 pesos el 3 de octubre,holdout
+H24,hibrido,NINGUNO,control: código en mayúsculas,,True,El código de descuento ANDES30 no funciona,holdout
+H25,hibrido,NINGUNO,control: ciudad compuesta,,True,¿El envío a Santa Marta cuesta lo mismo?,holdout
+H26,hibrido,NINGUNO,control: números sueltos,,True,"Mi pedido llegó incompleto, faltó 1 de 3 cajas",holdout
+H27,hibrido,NINGUNO,control: marcas,,True,¿Puedo pagar con tarjeta Visa o Mastercard?,holdout
+H28,hibrido,NINGUNO,control: rangos con guion,,True,El horario de 8-12 y 2-6 me sirve,holdout
+H29,hibrido,NINGUNO,control: frase capitalizada,,True,Quiero hablar con Servicio Al Cliente,holdout
+H30,hibrido,NINGUNO,control: palabra calle sin dirección,,True,La calle principal del barrio está cerrada,holdout

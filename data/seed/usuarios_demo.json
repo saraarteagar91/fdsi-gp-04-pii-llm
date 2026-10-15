@@ -1,0 +1,25 @@
+{
+  "aviso": "Usuarios de PRUEBA para el ambiente local del seminario. Datos ficticios. Las contraseñas solo existen aquí y en la base de datos como hash scrypt; cámbienlas si despliegan la aplicación fuera de su equipo.",
+  "usuarios": [
+    {"email": "admin@andesmarket.co", "password": "Seguridad#2026", "rol": "admin",
+     "nombre": "Equipo de Seguridad FDSI-GP-04", "cedula": null, "telefono": null, "direccion": null, "ciudad": null},
+    {"email": "juan.perez@gmail.com", "password": "Juan#Andes2026", "rol": "cliente",
+     "nombre": "Juan Carlos Pérez Gómez", "cedula": "1020304050", "telefono": "3001234567", "direccion": "Calle 80 # 12-34 Apto 502", "ciudad": "Bogotá"},
+    {"email": "sara.arteaga@correo.edu.co", "password": "Sara#Andes2026", "rol": "cliente",
+     "nombre": "Sara Viviana Arteaga Rodríguez", "cedula": "1015987654", "telefono": "3159876543", "direccion": "Carrera 15 No. 93-47", "ciudad": "Bogotá"},
+    {"email": "maria.rodriguez@outlook.com", "password": "Maria#Andes2026", "rol": "cliente",
+     "nombre": "María José Rodríguez", "cedula": "52345678", "telefono": "3104567890", "direccion": "Cra 7 #10-20 Apto 301", "ciudad": "Medellín"},
+    {"email": "andres.vivas@empresa.com.co", "password": "Andres#Andes2026", "rol": "cliente",
+     "nombre": "Andrés Camilo Vivas Baquero", "cedula": "1018456123", "telefono": "3207654321", "direccion": "Diagonal 45 Sur # 12-34", "ciudad": "Bogotá"},
+    {"email": "johan.beltran@hotmail.com", "password": "Johan#Andes2026", "rol": "cliente",
+     "nombre": "Johan Sebastián Beltrán Gutiérrez", "cedula": "1032987456", "telefono": "3112223344", "direccion": "Transversal 5 # 8-12", "ciudad": "Cali"}
+  ],
+  "pedidos": [
+    {"codigo": "AM-10231", "email": "juan.perez@gmail.com", "estado": "En camino", "transportadora": "Envía", "fecha_entrega": "18/10/2026", "creado": "2026-10-12", "items": [["SM-AUD-01", 1]]},
+    {"codigo": "AM-09874", "email": "juan.perez@gmail.com", "estado": "Entregado", "transportadora": "Servientrega", "fecha_entrega": "21/09/2026", "creado": "2026-09-17", "items": [["KB-MX", 1], ["SPK-BOOM", 1]]},
+    {"codigo": "AM-10458", "email": "sara.arteaga@correo.edu.co", "estado": "Entregado", "transportadora": "Servientrega", "fecha_entrega": "10/10/2026", "creado": "2026-10-06", "items": [["PM-LIC-600", 1]]},
+    {"codigo": "AM-10512", "email": "maria.rodriguez@outlook.com", "estado": "En preparación", "transportadora": "Coordinadora", "fecha_entrega": "21/10/2026", "creado": "2026-10-13", "items": [["AB-14", 1]]},
+    {"codigo": "AM-10577", "email": "andres.vivas@empresa.com.co", "estado": "Despachado", "transportadora": "Interrapidísimo", "fecha_entrega": "17/10/2026", "creado": "2026-10-11", "items": [["FIT-2", 1]]},
+    {"codigo": "AM-10603", "email": "johan.beltran@hotmail.com", "estado": "Pago en verificación", "transportadora": "Envía", "fecha_entrega": "23/10/2026", "creado": "2026-10-14", "items": [["CAF-DUO", 1]]}
+  ]
+}

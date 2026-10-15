@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" role="img">
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fbf3ec"/><stop offset="1" stop-color="#efdfd0"/></linearGradient>
+  <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eef0f3"/><stop offset="1" stop-color="#b9bfc8"/></linearGradient>
+  <linearGradient id="screen" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2b5cff"/><stop offset=".55" stop-color="#7a3cff"/><stop offset="1" stop-color="#ff5c8a"/></linearGradient>
+  <linearGradient id="glass" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#dff1ff" stop-opacity=".9"/><stop offset="1" stop-color="#a9d3f5" stop-opacity=".7"/></linearGradient>
+  <linearGradient id="gloss" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+  <radialGradient id="shadow"><stop offset="0" stop-color="#000" stop-opacity=".22"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="800" height="800" fill="url(#bg)"/>
+<ellipse cx="400" cy="660" rx="250" ry="34" fill="url(#shadow)"/>
+
+<rect x="230" y="170" width="340" height="120" rx="24" fill="#23272f"/>
+<rect x="250" y="280" width="300" height="300" rx="16" fill="url(#metal)"/>
+<rect x="230" y="560" width="340" height="60" rx="16" fill="#23272f"/>
+<rect x="290" y="300" width="220" height="40" rx="10" fill="#3a404b"/>
+<circle cx="320" cy="220" r="22" fill="#4a5160"/><circle cx="480" cy="220" r="22" fill="#4a5160"/>
+<circle cx="400" cy="220" r="14" fill="#1fd1a5"/>
+<path d="M300 340 L500 340 L470 380 L330 380 Z" fill="#23272f"/>
+<path d="M500 360 L620 360" stroke="#23272f" stroke-width="18" stroke-linecap="round"/>
+<path d="M350 430 h50 v70 a25 25 0 0 1 -25 25 a25 25 0 0 1 -25 -25 Z" fill="#fff"/>
+<path d="M410 430 h50 v70 a25 25 0 0 1 -25 25 a25 25 0 0 1 -25 -25 Z" fill="#fff"/>
+<rect x="352" y="434" width="46" height="18" fill="#6b3e26"/><rect x="412" y="434" width="46" height="18" fill="#6b3e26"/>
+<path d="M375 410 c-10 -15 10 -20 0 -35 M435 410 c-10 -15 10 -20 0 -35" stroke="#9aa1ab" stroke-width="5" fill="none" stroke-linecap="round"/>
+<path d="M550 380 L570 520" stroke="#c7ccd4" stroke-width="10" stroke-linecap="round"/>
+</svg>

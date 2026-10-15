@@ -119,3 +119,10 @@ def read_all_secure_logs() -> list[Dict[str, Any]]:
         return []
     with open(path, "r", encoding="utf-8") as f:
         return [json.loads(line) for line in f if line.strip()]
+
+
+def read_recent_logs(scenario: str, limit: int = 20) -> list[Dict[str, Any]]:
+    """Últimas entradas de un log, la más reciente primero (para el panel
+    de auditoría de la página)."""
+    records = read_all_secure_logs() if scenario == "secure" else read_all_unsecure_logs()
+    return list(reversed(records[-limit:]))

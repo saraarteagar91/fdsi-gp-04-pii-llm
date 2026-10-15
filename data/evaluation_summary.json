@@ -1,0 +1,182 @@
+{
+  "fecha": 1792037040.932597,
+  "arquitectura": "servicios separados (tienda, guardián, bóveda, chatbot)",
+  "conexion_servicios": "HTTP real entre procesos",
+  "casos_t04": 50,
+  "casos_holdout": 30,
+  "recall_deteccion_pii": 1.0,
+  "recall_umbral_esperado": 0.9,
+  "tasa_falsos_positivos": 0.0,
+  "fp_umbral_esperado": 0.1,
+  "precision_por_entidad": 1.0,
+  "fuga_residual_umbral_esperado": 0,
+  "latencia_umbral_esperado_ms": 500,
+  "similitud_umbral_esperado": 0.8,
+  "fuga_residual_hacia_llm": 0,
+  "fuga_residual_detalle": [],
+  "latencia_unsecure_promedio_ms": 6.725692036561668,
+  "latencia_secure_promedio_ms": 58.39980599004775,
+  "latencia_anadida_ms": 51.674113953486085,
+  "latencia_guardian_promedio_ms": 18.553313999436796,
+  "similitud_semantica_promedio": 0.9088139718770981,
+  "metodo_similitud": "embeddings (paraphrase-multilingual-MiniLM-L12-v2)",
+  "t03_fuga_por_reflejo": {
+    "unsecure_valores_reflejados_por_el_chatbot": 4,
+    "secure_valores_reflejados_por_el_chatbot": 0,
+    "secure_valores_en_respuesta_al_usuario": 4,
+    "secure_valores_en_log": 0,
+    "total_valores": 4
+  },
+  "t05_casos": 10,
+  "t05_exactitud_unsecure": 1.0,
+  "t05_exactitud_secure": 1.0,
+  "t05_correos_que_llegaron_al_chatbot_secure": 0,
+  "modos_guardian": {
+    "modelo": {
+      "principal": {
+        "recall": 0.975,
+        "tasa_falsos_positivos": 0.06666666666666667,
+        "precision": 0.9302325581395349,
+        "fuga": 0,
+        "entidades": 40,
+        "mensajes_control": 15,
+        "recall_por_tipo": {
+          "CEDULA": 0.875,
+          "CORREO": 1.0,
+          "DIRECCION": 1.0,
+          "NOMBRE": 1.0,
+          "TELEFONO": 1.0
+        },
+        "no_detectados": [
+          "35 CEDULA (dos cédulas, una sin prefijo)"
+        ],
+        "falsas_alarmas": [
+          "39: NOMBRE='semana pasada'"
+        ]
+      },
+      "holdout": {
+        "recall": 0.9583333333333334,
+        "tasa_falsos_positivos": 0.0,
+        "precision": 1.0,
+        "fuga": 1,
+        "entidades": 24,
+        "mensajes_control": 9,
+        "recall_por_tipo": {
+          "CEDULA": 1.0,
+          "CORREO": 1.0,
+          "DIRECCION": 0.75,
+          "NOMBRE": 1.0,
+          "TELEFONO": 1.0
+        },
+        "no_detectados": [
+          "H20 DIRECCION (dirección rural)"
+        ],
+        "falsas_alarmas": []
+      }
+    },
+    "reglas": {
+      "principal": {
+        "recall": 0.95,
+        "tasa_falsos_positivos": 0.0,
+        "precision": 1.0,
+        "fuga": 2,
+        "entidades": 40,
+        "mensajes_control": 15,
+        "recall_por_tipo": {
+          "CEDULA": 1.0,
+          "CORREO": 1.0,
+          "DIRECCION": 1.0,
+          "NOMBRE": 0.714,
+          "TELEFONO": 1.0
+        },
+        "no_detectados": [
+          "25 NOMBRE (mensaje con 4 entidades combinadas)",
+          "34 NOMBRE (nombre sin prefijo directo)"
+        ],
+        "falsas_alarmas": []
+      },
+      "holdout": {
+        "recall": 0.75,
+        "tasa_falsos_positivos": 0.0,
+        "precision": 1.0,
+        "fuga": 6,
+        "entidades": 24,
+        "mensajes_control": 9,
+        "recall_por_tipo": {
+          "CEDULA": 1.0,
+          "CORREO": 1.0,
+          "DIRECCION": 0.75,
+          "NOMBRE": 0.333,
+          "TELEFONO": 0.8
+        },
+        "no_detectados": [
+          "H1 NOMBRE (nombre tras 'les escribe')",
+          "H3 NOMBRE (firma al final)",
+          "H5 NOMBRE (nombre de tercero)",
+          "H11 TELEFONO (separadores irregulares)",
+          "H20 DIRECCION (dirección rural)",
+          "H21 NOMBRE (cuatro datos seguidos)"
+        ],
+        "falsas_alarmas": []
+      }
+    },
+    "hibrido": {
+      "principal": {
+        "recall": 1.0,
+        "tasa_falsos_positivos": 0.0,
+        "precision": 1.0,
+        "fuga": 0,
+        "entidades": 40,
+        "mensajes_control": 15,
+        "recall_por_tipo": {
+          "CEDULA": 1.0,
+          "CORREO": 1.0,
+          "DIRECCION": 1.0,
+          "NOMBRE": 1.0,
+          "TELEFONO": 1.0
+        },
+        "no_detectados": [],
+        "falsas_alarmas": []
+      },
+      "holdout": {
+        "recall": 0.9583333333333334,
+        "tasa_falsos_positivos": 0.0,
+        "precision": 1.0,
+        "fuga": 1,
+        "entidades": 24,
+        "mensajes_control": 9,
+        "recall_por_tipo": {
+          "CEDULA": 1.0,
+          "CORREO": 1.0,
+          "DIRECCION": 0.75,
+          "NOMBRE": 1.0,
+          "TELEFONO": 1.0
+        },
+        "no_detectados": [
+          "H20 DIRECCION (dirección rural)"
+        ],
+        "falsas_alarmas": []
+      }
+    }
+  },
+  "holdout": {
+    "recall": 0.9583333333333334,
+    "tasa_falsos_positivos": 0.0,
+    "precision": 1.0,
+    "fuga": 1,
+    "entidades": 24,
+    "mensajes_control": 9,
+    "recall_por_tipo": {
+      "CEDULA": 1.0,
+      "CORREO": 1.0,
+      "DIRECCION": 0.75,
+      "NOMBRE": 1.0,
+      "TELEFONO": 1.0
+    },
+    "no_detectados": [
+      "H20 DIRECCION (dirección rural)"
+    ],
+    "falsas_alarmas": []
+  },
+  "llm_utilizado": "asistente Andi entrenado localmente, como servicio externo"
+}

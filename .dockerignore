@@ -1,0 +1,13 @@
+.venv
+.venv*
+__pycache__
+.pytest_cache
+.env
+logs/*.jsonl
+data/*.enc.jsonl
+data/vault
+data/runtime
+secrets
+models/*.joblib
+.claude
+data/db

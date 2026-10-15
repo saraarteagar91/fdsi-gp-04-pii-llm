@@ -1,0 +1,8 @@
+# Dependencias extra para `python -m scripts.evaluate`:
+# - sentence-transformers: similitud semántica con embeddings (criterio de
+#   utilidad de la propuesta). Descarga el modelo
+#   paraphrase-multilingual-MiniLM-L12-v2 (~470 MB) la primera vez.
+# - matplotlib: gráfica de resultados.
+-r requirements.txt
+sentence-transformers>=3.0
+matplotlib>=3.9

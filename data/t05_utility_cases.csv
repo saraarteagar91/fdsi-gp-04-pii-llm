@@ -1,0 +1,11 @@
+id,turns,expected_order,expected_status
+1,"¿Cuál es el estado de mi pedido asociado al correo juan.perez@gmail.com?",AM-10231,En camino
+2,"Mi cédula es 1015987654, ¿ya llegó mi pedido?",AM-10458,Entregado
+3,"quiero rastrear mi pedido, mi correo es maria.rodriguez@outlook.com",AM-10512,En preparación
+4,"hola, ¿en qué va mi orden? cédula 1.018.456.123",AM-10577,Despachado
+5,"Soy Johan Beltrán, mi correo es johan.beltran@hotmail.com, ¿cómo va mi compra?",AM-10603,Pago en verificación
+6,"¿dónde está mi pedido? CC 52.345.678",AM-10512,En preparación
+7,"mi paquete no llega, mi correo es ANDRES.VIVAS@EMPRESA.COM.CO",AM-10577,Despachado
+8,"quiero saber dónde está mi pedido || sara.arteaga@correo.edu.co",AM-10458,Entregado
+9,"Hola, soy Juan Carlos Pérez Gómez, correo juan.perez@gmail.com || ¿y cómo va mi pedido?",AM-10231,En camino
+10,"estado del pedido AM-10603",AM-10603,Pago en verificación

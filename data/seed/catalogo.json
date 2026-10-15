@@ -1,0 +1,28 @@
+{
+  "productos": [
+    {"sku": "SM-AUD-01", "nombre": "Audífonos inalámbricos SoundMax Pro", "categoria": "Audio", "precio": 189900, "precio_antes": 259900, "stock": 34, "rating": 4.7, "reviews": 312, "destacado": 1,
+     "descripcion": "Cancelación activa de ruido, 40 horas de batería y carga rápida USB-C: 10 minutos de carga para 5 horas de música. Conexión Bluetooth 5.3 multipunto y micrófono con reducción de viento."},
+    {"sku": "PM-LIC-600", "nombre": "Licuadora PowerMix 600 W", "categoria": "Cocina", "precio": 219900, "precio_antes": null, "stock": 21, "rating": 4.5, "reviews": 148, "destacado": 1,
+     "descripcion": "Vaso de vidrio de 1,5 L, cuchillas de acero inoxidable de 6 puntas, 5 velocidades y función pulso. Ideal para jugos, sopas y hielo picado."},
+    {"sku": "AB-14", "nombre": "Portátil Andes Book 14\"", "categoria": "Computadores", "precio": 2399000, "precio_antes": 2699000, "stock": 9, "rating": 4.8, "reviews": 87, "destacado": 1,
+     "descripcion": "Pantalla 14\" Full HD IPS, procesador de 8 núcleos, 16 GB de RAM y 512 GB SSD. Teclado retroiluminado en español y hasta 12 horas de autonomía. Pesa 1,3 kg."},
+    {"sku": "FIT-2", "nombre": "Smartwatch Fit 2", "categoria": "Wearables", "precio": 349900, "precio_antes": 399900, "stock": 40, "rating": 4.4, "reviews": 205, "destacado": 1,
+     "descripcion": "Pantalla AMOLED de 1,6\", GPS integrado, ritmo cardíaco y oxígeno en sangre, más de 100 modos deportivos y resistencia al agua 5 ATM."},
+    {"sku": "CAF-DUO", "nombre": "Cafetera Express Duo", "categoria": "Cocina", "precio": 459900, "precio_antes": null, "stock": 15, "rating": 4.6, "reviews": 96, "destacado": 0,
+     "descripcion": "Bomba de 15 bares, vaporizador para espumar leche y doble salida para preparar dos espressos al tiempo. Tanque removible de 1,2 L."},
+    {"sku": "TV-55", "nombre": "Televisor 4K UltraView 55\"", "categoria": "TV y video", "precio": 2149000, "precio_antes": 2499000, "stock": 7, "rating": 4.7, "reviews": 64, "destacado": 1,
+     "descripcion": "Panel 4K UHD con HDR10, sistema operativo con aplicaciones de streaming, control por voz y tres puertos HDMI 2.1."},
+    {"sku": "PH-A5", "nombre": "Celular Nova A5 128 GB", "categoria": "Celulares", "precio": 899900, "precio_antes": null, "stock": 26, "rating": 4.3, "reviews": 178, "destacado": 1,
+     "descripcion": "Pantalla de 6,6\" a 120 Hz, cámara principal de 50 MP, batería de 5.000 mAh con carga de 33 W y 8 GB de RAM."},
+    {"sku": "SPK-BOOM", "nombre": "Parlante portátil Boom 20 W", "categoria": "Audio", "precio": 159900, "precio_antes": 189900, "stock": 52, "rating": 4.5, "reviews": 233, "destacado": 1,
+     "descripcion": "Sonido 360° de 20 W, resistente al agua IP67, 15 horas de batería y emparejamiento estéreo con un segundo parlante."},
+    {"sku": "AIR-5L", "nombre": "Freidora de aire CrispAir 5 L", "categoria": "Cocina", "precio": 329900, "precio_antes": 379900, "stock": 18, "rating": 4.8, "reviews": 421, "destacado": 1,
+     "descripcion": "Canasta antiadherente de 5 L, 8 programas preestablecidos y pantalla táctil. Cocina con hasta 85 % menos aceite."},
+    {"sku": "VAC-R3", "nombre": "Aspiradora robot CleanBot R3", "categoria": "Hogar", "precio": 1099000, "precio_antes": null, "stock": 11, "rating": 4.4, "reviews": 59, "destacado": 0,
+     "descripcion": "Navegación láser, aspira y trapea, 120 minutos de autonomía y control desde la aplicación móvil. Regresa sola a su base de carga."},
+    {"sku": "KB-MX", "nombre": "Teclado mecánico MX Lite", "categoria": "Accesorios", "precio": 249900, "precio_antes": null, "stock": 30, "rating": 4.6, "reviews": 112, "destacado": 0,
+     "descripcion": "Switches táctiles silenciosos, distribución en español, iluminación blanca y conexión inalámbrica o por cable."},
+    {"sku": "PRN-INK", "nombre": "Impresora multifuncional InkJet 3", "categoria": "Accesorios", "precio": 389900, "precio_antes": 429900, "stock": 13, "rating": 4.2, "reviews": 74, "destacado": 0,
+     "descripcion": "Imprime, copia y escanea. Wi-Fi, impresión desde el celular y sistema de tinta continua de alto rendimiento."}
+  ]
+}

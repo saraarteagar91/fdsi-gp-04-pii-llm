@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" role="img">
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f2f2f4"/><stop offset="1" stop-color="#dcdde3"/></linearGradient>
+  <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eef0f3"/><stop offset="1" stop-color="#b9bfc8"/></linearGradient>
+  <linearGradient id="screen" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2b5cff"/><stop offset=".55" stop-color="#7a3cff"/><stop offset="1" stop-color="#ff5c8a"/></linearGradient>
+  <linearGradient id="glass" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#dff1ff" stop-opacity=".9"/><stop offset="1" stop-color="#a9d3f5" stop-opacity=".7"/></linearGradient>
+  <linearGradient id="gloss" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+  <radialGradient id="shadow"><stop offset="0" stop-color="#000" stop-opacity=".22"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="800" height="800" fill="url(#bg)"/>
+<ellipse cx="400" cy="660" rx="250" ry="34" fill="url(#shadow)"/>
+
+<path d="M120 380 L680 380 L720 560 L80 560 Z" fill="#23272f"/>
+<path d="M80 560 L720 560 L720 590 L80 590 Z" fill="#14171c"/>
+<g fill="#f2f3f5"><path d="M150 398 h34 l2 28 h-38 Z"/><path d="M192 398 h34 l2 28 h-38 Z"/><path d="M234 398 h34 l2 28 h-38 Z"/><path d="M276 398 h34 l2 28 h-38 Z"/><path d="M318 398 h34 l2 28 h-38 Z"/><path d="M360 398 h34 l2 28 h-38 Z"/><path d="M402 398 h34 l2 28 h-38 Z"/><path d="M444 398 h34 l2 28 h-38 Z"/><path d="M486 398 h34 l2 28 h-38 Z"/><path d="M528 398 h34 l2 28 h-38 Z"/><path d="M570 398 h34 l2 28 h-38 Z"/><path d="M612 398 h34 l2 28 h-38 Z"/><path d="M654 398 h34 l2 28 h-38 Z"/><path d="M140 436 h34 l2 28 h-38 Z"/><path d="M182 436 h34 l2 28 h-38 Z"/><path d="M224 436 h34 l2 28 h-38 Z"/><path d="M266 436 h34 l2 28 h-38 Z"/><path d="M308 436 h34 l2 28 h-38 Z"/><path d="M350 436 h34 l2 28 h-38 Z"/><path d="M392 436 h34 l2 28 h-38 Z"/><path d="M434 436 h34 l2 28 h-38 Z"/><path d="M476 436 h34 l2 28 h-38 Z"/><path d="M518 436 h34 l2 28 h-38 Z"/><path d="M560 436 h34 l2 28 h-38 Z"/><path d="M602 436 h34 l2 28 h-38 Z"/><path d="M644 436 h34 l2 28 h-38 Z"/><path d="M130 474 h34 l2 28 h-38 Z"/><path d="M172 474 h34 l2 28 h-38 Z"/><path d="M214 474 h34 l2 28 h-38 Z"/><path d="M256 474 h34 l2 28 h-38 Z"/><path d="M298 474 h34 l2 28 h-38 Z"/><path d="M340 474 h34 l2 28 h-38 Z"/><path d="M382 474 h34 l2 28 h-38 Z"/><path d="M424 474 h34 l2 28 h-38 Z"/><path d="M466 474 h34 l2 28 h-38 Z"/><path d="M508 474 h34 l2 28 h-38 Z"/><path d="M550 474 h34 l2 28 h-38 Z"/><path d="M592 474 h34 l2 28 h-38 Z"/><path d="M634 474 h34 l2 28 h-38 Z"/><path d="M120 512 h34 l2 28 h-38 Z"/><path d="M162 512 h34 l2 28 h-38 Z"/><path d="M204 512 h34 l2 28 h-38 Z"/><path d="M246 512 h34 l2 28 h-38 Z"/><path d="M288 512 h34 l2 28 h-38 Z"/><path d="M330 512 h34 l2 28 h-38 Z"/><path d="M372 512 h34 l2 28 h-38 Z"/><path d="M414 512 h34 l2 28 h-38 Z"/><path d="M456 512 h34 l2 28 h-38 Z"/><path d="M498 512 h34 l2 28 h-38 Z"/><path d="M540 512 h34 l2 28 h-38 Z"/><path d="M582 512 h34 l2 28 h-38 Z"/><path d="M624 512 h34 l2 28 h-38 Z"/></g>
+<path d="M260 552 h280 l-2 -26 h-276 Z" fill="#f2f3f5"/>
+<rect x="640" y="392" width="20" height="8" rx="4" fill="#1fd1a5"/>
+</svg>
