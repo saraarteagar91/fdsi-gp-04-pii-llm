@@ -693,6 +693,9 @@
       ["Hablar con un asesor", "Quiero hablar con un asesor"],
     ];
     const ADMIN_CHIPS = [
+      // datos 100 % ficticios, para demostrar con un LLM externo real
+      ["Demo datos ficticios", "Hola, soy Valeria Torres Mejía, cédula 1.023.456.789, correo valeria.torres@correoquimbaya.com, celular 315 778 2143. ¿Me ayudan a actualizar mis datos?"],
+      ["Límite: cédula sin prefijo", "el número es 79845123, regístralo como mi identificación"],
       ["T01 Datos personales", "Hola, soy Juan Carlos Pérez Gómez, cédula 1.020.304.050, correo juan.perez@gmail.com, celular 300 123 4567"],
       ["T05 Pedido por correo", "¿Cuál es el estado de mi pedido asociado al correo juan.perez@gmail.com?"],
       ["T03 Resumen", "Resume lo que te dije"],
