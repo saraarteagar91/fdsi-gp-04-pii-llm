@@ -7,6 +7,11 @@ Servicio BÓVEDA: el único componente con la llave privada.
                conversación indicada (respuesta final al usuario).
 - /resolve:    descifra UN marcador para un propósito interno autorizado
                (consultar un pedido). Cada uso queda en la bitácora.
+- DELETE /session/{id}: borra una conversación al cerrarla.
+
+Es efímera: todo vive en memoria y cada conversación vence por
+inactividad (VAULT_SESSION_TTL_SECONDS). Una conversación vencida ya no
+se puede reidentificar ni resolver.
 
 No habla con el chatbot ni con el guardián; solo atiende a la tienda.
 """
@@ -61,9 +66,9 @@ def reidentify(body: ReidentifyIn) -> dict:
 
     def _swap(m: re.Match) -> str:
         token = m.group(0)
-        if token not in own:  # marcador de otra conversación: no se revela
+        if token not in own:  # marcador de otra conversación (o vencida): no se revela
             return token
-        return store.decrypt(body.session_id, token)
+        return store.decrypt(body.session_id, token) or token
 
     return {"text": TOKEN_RE.sub(_swap, body.text)}
 
@@ -78,6 +83,11 @@ def resolve(body: ResolveIn) -> dict:
         raise HTTPException(status_code=404, detail="Marcador desconocido en esta conversación")
     store.log_access(body.session_id, body.token, body.purpose)
     return {"value": value}
+
+
+@app.delete("/session/{session_id}", dependencies=[auth])
+def forget_session(session_id: str) -> dict:
+    return {"borrada": get_store().forget(session_id)}
 
 
 @app.get("/health")

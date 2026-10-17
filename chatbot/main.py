@@ -58,7 +58,8 @@ def complete(message: str, history: list[dict]) -> str:
     if provider == "openai":
         from openai import OpenAI
 
-        resp = OpenAI(api_key=settings.openai_api_key).chat.completions.create(
+        client = OpenAI(api_key=settings.openai_api_key, base_url=settings.openai_base_url or None)
+        resp = client.chat.completions.create(
             model=settings.openai_model,
             messages=[{"role": "system", "content": SYSTEM_PROMPT}, *history, {"role": "user", "content": message}],
         )

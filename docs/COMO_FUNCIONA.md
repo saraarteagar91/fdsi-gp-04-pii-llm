@@ -12,7 +12,7 @@ Piensa en una oficina con cuatro personas que no confían entre sí:
 |---|---|---|---|
 | **Tienda** | La recepcionista | Recibe al cliente, maneja cuentas, carrito y pedidos, coordina todo | No tiene llaves: no puede descifrar nada por su cuenta |
 | **Guardián** | El que mete las cartas en sobres sellados | Lee el mensaje, encuentra los datos personales y los mete en un "sobre" cifrado | No puede abrir los sobres (solo tiene la llave pública), no guarda nada, no tiene internet |
-| **Bóveda** | La caja fuerte | Guarda los sobres; es la única con la llave para abrirlos | No lee mensajes ni habla con el chatbot |
+| **Bóveda** | La caja fuerte | Guarda los sobres **solo mientras dura la conversación**; es la única con la llave para abrirlos | No lee mensajes, no habla con el chatbot y no guarda nada en disco |
 | **Chatbot (Andi)** | El asesor que atiende | Conversa con el cliente | Nunca ve datos reales, solo `[NOMBRE_1]`, `[CORREO_1]`… |
 
 ## 3. La tienda por dentro: usuarios y base de datos
@@ -35,7 +35,7 @@ Los usuarios de prueba y sus contraseñas están en `data/seed/usuarios_demo.jso
 El usuario escribe: *"Hola, soy Juan, mi correo es juan@gmail.com, ¿cómo va mi pedido?"*
 
 1. **Tienda → Guardián.** El guardián lee el texto y encuentra `Juan` (NOMBRE) y `juan@gmail.com` (CORREO). Cifra cada dato con la **llave pública** y devuelve solo esto: "en la posición 11 a 15 hay un NOMBRE, este es el sobre cifrado". Nunca devuelve el dato en claro. Después lo olvida.
-2. **Tienda → Bóveda.** La bóveda guarda los sobres y asigna los marcadores `[NOMBRE_1]` y `[CORREO_1]`. Si en otro mensaje aparece el mismo correo, le da el mismo marcador. Lo reconoce por un "índice ciego", una huella con clave secreta, sin abrir el sobre.
+2. **Tienda → Bóveda.** La bóveda guarda los sobres en memoria (nunca en disco) y asigna los marcadores `[NOMBRE_1]` y `[CORREO_1]`. Si en otro mensaje aparece el mismo correo, le da el mismo marcador. Lo reconoce por un "índice ciego", una huella con clave secreta, sin abrir el sobre.
 3. **La tienda cambia** los datos por los marcadores: *"Hola, soy [NOMBRE_1], mi correo es [CORREO_1], ¿cómo va mi pedido?"*
 4. **Tienda → Chatbot.** Solo viaja ese texto con marcadores. Andi responde: *"Claro [NOMBRE_1], reviso el pedido de [CORREO_1] {{consultar_pedido:[CORREO_1]}}"*.
 5. **Tienda → Guardián (guardia de salida).** Revisa que el chatbot no haya inventado datos personales. Si los hay, los borra.
@@ -58,6 +58,19 @@ Detectar un dato sin leerlo es imposible. Por eso el guardián lo ve un instante
 | Que el chatbot llegue a la bóveda | Redes separadas | Desde el contenedor del chatbot: bóveda → BLOQUEADO |
 | Que cualquiera use los servicios | Cada servicio exige su token | Sin token → 401 |
 | Que un usuario vea datos de otro | La bóveda solo reidentifica marcadores de la conversación indicada | Prueba con otra sesión: el marcador no se revela |
+| Que roben los datos guardados | La bóveda no escribe en disco; las conversaciones vencen tras 30 min sin actividad o al cerrar sesión | Pruebas que bloquean la escritura de archivos en la bóveda y que simulan el vencimiento |
+
+### La bóveda olvida
+
+La caja fuerte no es para siempre. Es como un casillero que se vacía solo:
+
+- Los sobres viven **solo en la memoria** de la bóveda. No hay ningún archivo con datos personales, ni siquiera cifrados, que alguien pueda robar.
+- Si la conversación pasa **30 minutos sin mensajes**, la bóveda la borra. El tiempo se configura con `VAULT_SESSION_TTL_SECONDS`.
+- Cuando el usuario **cierra sesión**, la bóveda borra de inmediato sus conversaciones.
+- Si la bóveda se reinicia, se pierde todo.
+- Después de borrada, la conversación ya no se puede "abrir": la respuesta mostraría `[CORREO_1]` en vez del correo.
+
+La única condición es que **mientras la conversación está abierta**, los sobres siguen en la memoria de la bóveda. Por eso el plazo es corto.
 
 Además, el mismo correo no se guarda con un hash simple, porque una cédula se podría adivinar probando todas las combinaciones. Se usa un **HMAC con pimienta secreta**, que solo tiene el guardián.
 

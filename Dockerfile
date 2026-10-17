@@ -17,7 +17,7 @@ COPY . .
 # `python -m scripts.train_guardian`).
 RUN python -m scripts.train_bot \
     && useradd --create-home appuser \
-    && mkdir -p /app/logs /app/data/vault /app/data/db \
+    && mkdir -p /app/logs /app/data/db \
     && chown -R appuser /app/logs /app/data /app/models
 
 USER appuser

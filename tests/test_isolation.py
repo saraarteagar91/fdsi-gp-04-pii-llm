@@ -8,13 +8,15 @@ Se verifica que:
 3. Solo la bóveda (llave privada) puede abrir lo que cifró el guardián.
 4. Ningún servicio atiende sin su token.
 5. La bóveda solo revela marcadores de la conversación indicada y solo
-   para propósitos autorizados.
+   para propósitos autorizados. Es efímera: no escribe en disco y las
+   conversaciones vencen por inactividad.
 6. La tienda no tiene ninguna llave.
 7. docker-compose aísla las redes: el guardián no tiene salida a
    internet ni disco escribible, y el chatbot no alcanza a la bóveda.
 """
 import base64
 import builtins
+import importlib
 from pathlib import Path
 
 import pytest
@@ -83,6 +85,95 @@ def test_vault_resolve_requires_authorized_purpose(client, services):
     body = {"session_id": a["session_id"], "token": "[CORREO_1]"}
     assert services["vault"].post("/resolve", json={**body, "purpose": "marketing"}).status_code == 403
     assert services["vault"].post("/resolve", json={**body, "purpose": "consultar_pedido"}).json()["value"] == "juan.perez@gmail.com"
+
+
+def _forbid_disk_writes(monkeypatch, who: str) -> None:
+    real_open = builtins.open
+
+    def guarded_open(file, mode="r", *args, **kwargs):
+        if any(m in mode for m in ("w", "a", "x", "+")):
+            raise AssertionError(f"{who} intentó escribir en {file}")
+        return real_open(file, mode, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "open", guarded_open)
+    monkeypatch.setattr(Path, "write_text", lambda *a, **k: (_ for _ in ()).throw(AssertionError(f"{who} escribió en disco")))
+    monkeypatch.setattr(Path, "write_bytes", lambda *a, **k: (_ for _ in ()).throw(AssertionError(f"{who} escribió en disco")))
+
+
+def test_vault_writes_nothing_to_disk(services, monkeypatch):
+    entities = services["guardian"].post("/protect", json={"text": "Soy Laura Gómez, correo laura@x.co"}).json()["entities"]
+    _forbid_disk_writes(monkeypatch, "La bóveda")
+    vault = services["vault"]
+    payload = [{k: e[k] for k in ("label", "ciphertext", "blind_index")} for e in entities]
+    tokens = vault.post("/tokens", json={"session_id": "s-disco", "entities": payload}).json()["tokens"]
+    assert tokens == ["[NOMBRE_1]", "[CORREO_1]"]
+    assert vault.post("/reidentify", json={"session_id": "s-disco", "text": "Hola [NOMBRE_1]"}).json()["text"] == "Hola Laura Gómez"
+    body = {"session_id": "s-disco", "token": "[CORREO_1]", "purpose": "consultar_pedido"}
+    assert vault.post("/resolve", json=body).json()["value"] == "laura@x.co"
+
+
+def _store_tokens(services, session_id: str, text: str) -> list[str]:
+    entities = services["guardian"].post("/protect", json={"text": text}).json()["entities"]
+    payload = [{k: e[k] for k in ("label", "ciphertext", "blind_index")} for e in entities]
+    return services["vault"].post("/tokens", json={"session_id": session_id, "entities": payload}).json()["tokens"]
+
+
+def test_vault_expired_conversation_cannot_be_reidentified_or_resolved(services, monkeypatch):
+    import vault.store
+    from vault.config import settings
+
+    clock = [vault.store._now()]
+    monkeypatch.setattr(vault.store, "_now", lambda: clock[0])
+    assert _store_tokens(services, "s-vence", "mi correo es ana@x.co") == ["[CORREO_1]"]
+    vault_client = services["vault"]
+    reid = {"session_id": "s-vence", "text": "Tu correo es [CORREO_1]"}
+    resolve = {"session_id": "s-vence", "token": "[CORREO_1]", "purpose": "consultar_pedido"}
+
+    clock[0] += settings.session_ttl_seconds - 1  # la actividad renueva el plazo
+    assert vault_client.post("/reidentify", json=reid).json()["text"] == "Tu correo es ana@x.co"
+
+    clock[0] += settings.session_ttl_seconds
+    assert vault_client.post("/reidentify", json=reid).json()["text"] == "Tu correo es [CORREO_1]"
+    assert vault_client.post("/resolve", json=resolve).status_code == 404
+    assert vault.store.get_store().decrypt("s-vence", "[CORREO_1]") is None
+
+
+def test_vault_same_value_gets_same_token_within_a_conversation(services):
+    first = _store_tokens(services, "s-mismo", "correo juan.perez@gmail.com, cel 300 123 4567")
+    again = _store_tokens(services, "s-mismo", "repito JUAN.PEREZ@GMAIL.COM y 3001234567, y otro: ana@x.co")
+    assert first == ["[CORREO_1]", "[TELEFONO_1]"]
+    assert again == ["[CORREO_1]", "[TELEFONO_1]", "[CORREO_2]"]
+    assert _store_tokens(services, "s-otra", "mi cel es 3001234567") == ["[TELEFONO_1]"]
+
+
+def test_vault_forgets_a_closed_conversation(services):
+    _store_tokens(services, "s-cerrar", "mi correo es ana@x.co")
+    assert services["vault"].delete("/session/s-cerrar").json() == {"borrada": True}
+    assert services["vault"].post("/reidentify", json={"session_id": "s-cerrar", "text": "[CORREO_1]"}).json()["text"] == "[CORREO_1]"
+    assert TestClient(importlib.import_module("vault.main").app).delete("/session/s-cerrar").status_code == 401
+
+
+def test_vault_caps_simultaneous_conversations(services, monkeypatch):
+    from vault.config import settings
+    from vault.store import get_store
+
+    monkeypatch.setattr(settings, "max_sessions", 3)
+    for i in range(5):
+        _store_tokens(services, f"s-tope-{i}", "mi correo es ana@x.co")
+    assert get_store().active_sessions() <= 3
+    assert get_store().tokens_of("s-tope-0") == []
+    assert get_store().tokens_of("s-tope-4") == ["[CORREO_1]"]
+
+
+def test_logout_makes_the_vault_forget_the_user_conversations(services):
+    from common.wiring import logged_client
+    from vault.store import get_store
+
+    user = logged_client("sara.arteaga@correo.edu.co")
+    sid = user.post("/secure/chat", json={"message": "Mi correo es sara.arteaga@correo.edu.co"}).json()["session_id"]
+    assert get_store().tokens_of(sid) == ["[CORREO_1]"]
+    user.post("/api/auth/logout")
+    assert get_store().tokens_of(sid) == []
 
 
 def test_shop_has_no_keys():

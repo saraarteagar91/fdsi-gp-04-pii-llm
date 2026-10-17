@@ -4,7 +4,7 @@ import sqlite3
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from pydantic import BaseModel, Field
 
-from app import db, security
+from app import clients, db, security, sessions
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
@@ -61,6 +61,11 @@ def register(body: RegisterIn, response: Response) -> dict:
 
 @router.post("/logout")
 def logout(request: Request, response: Response) -> dict:
+    user = security.current_user(request)
+    if user:
+        # la bóveda olvida de inmediato los datos de sus conversaciones seguras
+        for session_id in sessions.close_user_sessions("secure", user["id"]):
+            clients.delete("vault", f"/session/{session_id}")
     security.end_session(request, response)
     return {"ok": True}
 

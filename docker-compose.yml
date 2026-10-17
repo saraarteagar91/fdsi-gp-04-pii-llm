@@ -5,6 +5,7 @@
 #   guardian  -> red interna sin salida a internet, disco de solo lectura,
 #                solo la llave PÚBLICA. No puede descifrar.
 #   vault     -> red interna sin salida a internet. Única con la llave PRIVADA.
+#                Efímera: guarda los datos cifrados solo en memoria.
 #   chatbot   -> su propia red (con salida a internet solo por si se usa
 #                Claude/GPT). No alcanza ni al guardián ni a la bóveda.
 #
@@ -68,10 +69,8 @@ services:
       - secrets/env/vault.env
     environment:
       VAULT_PRIVATE_KEY_PATH: /run/secrets/vault/private.key
-      VAULT_STORE_DIR: /app/data/vault
     volumes:
       - ./secrets/vault:/run/secrets/vault:ro
-      - ./data/vault:/app/data/vault
     networks:
       - red_boveda
 

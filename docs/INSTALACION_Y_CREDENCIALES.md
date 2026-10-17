@@ -21,7 +21,7 @@ Estas cuentas se crean solas la primera vez que arranca la tienda, a partir de `
 
 **Las llaves de cifrado y los tokens entre servicios** (carpeta `secrets/`) **no son contraseñas que deban saberse**. Cada computador genera las suyas con un comando (paso 3.5), y es mejor así: las llaves no deben viajar de un equipo a otro.
 
-Solo hay una excepción. Si copian también las carpetas `data/vault/` (datos cifrados del chat) o `logs/`, esos datos quedan ilegibles con llaves nuevas. No pasa nada grave: simplemente no las copien.
+Solo hay una excepción. Si copian también la carpeta `logs/`, esos datos quedan ilegibles con llaves nuevas. No pasa nada grave: simplemente no la copien. (La bóveda ya no guarda nada en disco; si ven una carpeta `data/vault/` de versiones anteriores, se puede borrar.)
 
 **Lo que NO deben copiar al otro PC:** `.venv/`, `secrets/`, `data/db/`, `data/vault/`, `logs/*.jsonl`.
 
@@ -111,7 +111,7 @@ python -m scripts.train_guardian
 python -m scripts.train_bot
 ```
 
-- `pytest -q`: corre las 62 pruebas automatizadas.
+- `pytest -q`: corre las 68 pruebas automatizadas.
 - `python -m scripts.evaluate`: corre la evaluación completa. Antes hay que instalar las dependencias de evaluación con `pip install -r requirements-eval.txt`.
 - `python -m scripts.train_guardian`: reentrena el modelo guardián (unos 4 minutos).
 - `python -m scripts.train_bot`: reentrena el chatbot Andi.

@@ -25,7 +25,6 @@ def configure_env(root: Path | None = None, chatbot_provider: str = "mock") -> P
         "GUARDIAN_PUBLIC_KEY_PATH": str(secrets_root / "guardian" / "public.key"),
         "GUARDIAN_PEPPER_PATH": str(secrets_root / "guardian" / "pepper.key"),
         "VAULT_PRIVATE_KEY_PATH": str(secrets_root / "vault" / "private.key"),
-        "VAULT_STORE_DIR": str(root / "vault"),
         "APP_LOG_DIR": str(root / "logs"),
         "APP_DB_PATH": str(root / "db" / "andes_market.db"),
         "CHATBOT_LLM_PROVIDER": chatbot_provider,

@@ -1,15 +1,25 @@
 """
-Registro de marcadores de la bóveda.
+Registro de marcadores de la bóveda — EFÍMERO, solo en memoria.
 
 Por cada conversación guarda: marcador ([CORREO_1]) -> tipo, índice ciego y
-el dato CIFRADO tal como llegó del guardián. Los datos quedan cifrados
-también en disco (vault_tokens.jsonl); solo se descifran en memoria, en el
-momento de reidentificar o de una consulta interna autorizada.
+el dato CIFRADO tal como llegó del guardián. No se escribe nada en disco:
+un archivo con los datos cifrados sería un blanco de robo y además los
+dejaría vivos más allá de la conversación.
+
+- Cada conversación vence tras VAULT_SESSION_TTL_SECONDS sin actividad.
+  La limpieza es perezosa: se hace en cada operación.
+- Hay un tope de conversaciones simultáneas (VAULT_MAX_SESSIONS); al
+  llegar, se descarta la de actividad más antigua.
+- Al reiniciar el servicio se pierde todo.
+
+Mientras la conversación está abierta, los cifrados siguen en la memoria
+del proceso; solo se descifran en el momento de reidentificar o de una
+consulta interna autorizada.
 """
 import base64
-import json
 import threading
 import time
+from collections import OrderedDict, deque
 from dataclasses import dataclass, field
 from functools import lru_cache
 from pathlib import Path
@@ -18,12 +28,16 @@ from nacl.public import PrivateKey, SealedBox
 
 from vault.config import settings
 
-STORE_FILENAME = "vault_tokens.jsonl"
-ACCESS_LOG_FILENAME = "vault_access.jsonl"
+ACCESS_LOG_MAX = 1000
+
+
+def _now() -> float:
+    return time.monotonic()
 
 
 @dataclass
 class SessionTokens:
+    last_used: float
     tokens: dict[str, dict] = field(default_factory=dict)       # marcador -> registro
     by_index: dict[str, str] = field(default_factory=dict)      # índice ciego -> marcador
     counters: dict[str, int] = field(default_factory=dict)      # etiqueta -> último número
@@ -32,64 +46,76 @@ class SessionTokens:
 class TokenStore:
     def __init__(self) -> None:
         self._lock = threading.Lock()
-        self._sessions: dict[str, SessionTokens] = {}
-        self._dir = Path(settings.store_dir)
-        self._dir.mkdir(parents=True, exist_ok=True)
-        self._load()
+        # Ordenado por actividad: la primera es la menos reciente.
+        self._sessions: OrderedDict[str, SessionTokens] = OrderedDict()
+        # Bitácora de descifrados: solo marcador y propósito, nunca el valor.
+        self.access_log: deque[dict] = deque(maxlen=ACCESS_LOG_MAX)
 
-    @property
-    def path(self) -> Path:
-        return self._dir / STORE_FILENAME
+    def _purge_expired(self, now: float) -> None:
+        ttl = settings.session_ttl_seconds
+        while self._sessions:
+            sid, s = next(iter(self._sessions.items()))
+            if now - s.last_used < ttl:
+                break
+            del self._sessions[sid]
 
-    def _load(self) -> None:
-        if not self.path.exists():
-            return
-        with open(self.path, encoding="utf-8") as f:
-            for line in f:
-                if line.strip():
-                    self._index(json.loads(line))
-
-    def _index(self, rec: dict) -> None:
-        s = self._sessions.setdefault(rec["session_id"], SessionTokens())
-        s.tokens[rec["token"]] = rec
-        s.by_index[rec["blind_index"]] = rec["token"]
-        n = int(rec["token"].rsplit("_", 1)[1].rstrip("]"))
-        s.counters[rec["label"]] = max(s.counters.get(rec["label"], 0), n)
+    def _get(self, session_id: str, create: bool = False) -> SessionTokens | None:
+        """Devuelve la conversación (vigente) y renueva su vencimiento."""
+        now = _now()
+        self._purge_expired(now)
+        s = self._sessions.get(session_id)
+        if s is None:
+            if not create:
+                return None
+            while len(self._sessions) >= settings.max_sessions:
+                self._sessions.popitem(last=False)
+            s = self._sessions[session_id] = SessionTokens(last_used=now)
+        s.last_used = now
+        self._sessions.move_to_end(session_id)
+        return s
 
     def assign(self, session_id: str, label: str, ciphertext: str, blind_index: str) -> str:
         """Devuelve el marcador del dato: el mismo si ya apareció en la
         conversación (mismo índice ciego), uno nuevo si no."""
         with self._lock:
-            s = self._sessions.setdefault(session_id, SessionTokens())
+            s = self._get(session_id, create=True)
             if blind_index in s.by_index:
                 return s.by_index[blind_index]
             n = s.counters.get(label, 0) + 1
-            rec = {
-                "session_id": session_id,
-                "token": f"[{label}_{n}]",
-                "label": label,
-                "blind_index": blind_index,
-                "ciphertext": ciphertext,
-                "timestamp": time.time(),
-            }
-            with open(self.path, "a", encoding="utf-8") as f:
-                f.write(json.dumps(rec) + "\n")
-            self._index(rec)
-            return rec["token"]
+            s.counters[label] = n
+            token = f"[{label}_{n}]"
+            s.tokens[token] = {"label": label, "blind_index": blind_index, "ciphertext": ciphertext}
+            s.by_index[blind_index] = token
+            return token
 
     def decrypt(self, session_id: str, token: str) -> str | None:
-        rec = self._sessions.get(session_id, SessionTokens()).tokens.get(token)
+        """None si la conversación venció o el marcador no es de ella."""
+        with self._lock:
+            s = self._get(session_id)
+            rec = s.tokens.get(token) if s else None
         if rec is None:
             return None
         return _box().decrypt(base64.b64decode(rec["ciphertext"])).decode("utf-8")
 
     def tokens_of(self, session_id: str) -> list[str]:
-        return list(self._sessions.get(session_id, SessionTokens()).tokens)
+        with self._lock:
+            s = self._get(session_id)
+            return list(s.tokens) if s else []
+
+    def forget(self, session_id: str) -> bool:
+        """Borra una conversación (al cerrarla). True si existía."""
+        with self._lock:
+            return self._sessions.pop(session_id, None) is not None
+
+    def active_sessions(self) -> int:
+        with self._lock:
+            self._purge_expired(_now())
+            return len(self._sessions)
 
     def log_access(self, session_id: str, token: str, purpose: str) -> None:
-        """Bitácora de cada descifrado (sin el valor), para auditoría."""
-        with open(self._dir / ACCESS_LOG_FILENAME, "a", encoding="utf-8") as f:
-            f.write(json.dumps({"timestamp": time.time(), "session_id": session_id, "token": token, "proposito": purpose}) + "\n")
+        """Bitácora de cada descifrado, en memoria: solo marcador y
+        propósito (ni el valor ni la conversación)."""
+        self.access_log.append({"timestamp": time.time(), "token": token, "proposito": purpose})
 
 
 @lru_cache(maxsize=1)

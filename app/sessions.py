@@ -43,6 +43,15 @@ def get_or_create(scenario: str, session_id: str | None, user_id: int) -> Sessio
         return session
 
 
+def close_user_sessions(scenario: str, user_id: int) -> list[str]:
+    """Cierra las conversaciones de un usuario y devuelve sus ids."""
+    with _lock:
+        keys = [k for k, s in _sessions.items() if s.scenario == scenario and s.user_id == user_id]
+        for k in keys:
+            del _sessions[k]
+        return [sid for _, sid in keys]
+
+
 def reset() -> None:
     with _lock:
         _sessions.clear()

@@ -68,11 +68,12 @@ def test_reflection_uses_tokens_not_real_pii(client):
     assert "Juan Carlos Pérez Gómez" in resp["response"]
 
 
-def test_vault_store_on_disk_is_encrypted(client):
+def test_vault_memory_holds_only_ciphertext(client):
+    """La bóveda guarda en memoria el dato cifrado, nunca en claro."""
     from vault.store import get_store
 
-    client.post("/secure/chat", json={"user_id": "u1", "message": PII_MESSAGE})
-    raw = get_store().path.read_text(encoding="utf-8")
+    sid = client.post("/secure/chat", json={"user_id": "u1", "message": PII_MESSAGE}).json()["session_id"]
+    raw = json.dumps(get_store()._sessions[sid].tokens, ensure_ascii=False)
     for value in PII_VALUES:
         assert value not in raw
     assert "ciphertext" in raw

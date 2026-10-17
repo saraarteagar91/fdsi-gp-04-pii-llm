@@ -48,6 +48,15 @@ def call(service: str, path: str, payload: dict) -> dict:
     return resp.json()
 
 
+def delete(service: str, path: str) -> bool:
+    """Borrado de mejor esfuerzo: si el servicio no responde no se bloquea
+    a quien llama (lo que no se borre vence solo)."""
+    try:
+        return _client(service).delete(path).status_code < 400
+    except httpx.HTTPError:
+        return False
+
+
 def health(service: str) -> dict:
     try:
         resp = _client(service).get("/health")

@@ -31,10 +31,23 @@ flowchart LR
 |---|---|---|---|
 | Tienda | `app/` | Página web, usuarios e inicio de sesión, catálogo, carrito, pedidos (SQLite), logs, tokens para hablar con los otros | Ninguna llave de cifrado, ningún modelo |
 | Guardián | `guardian/` | Modelo NER propio, reglas de validación, llave **pública**, pimienta del índice ciego | Llave privada, disco escribible, salida a internet, memoria entre peticiones |
-| Bóveda | `vault/` | Llave **privada**, datos cifrados, bitácora de accesos | No interpreta texto; no habla con el chatbot |
+| Bóveda | `vault/` | Llave **privada**, datos cifrados **solo en memoria** y con vencimiento, bitácora de accesos en memoria | No escribe en disco; no interpreta texto; no habla con el chatbot |
 | Chatbot | `chatbot/` | Modelo de intenciones Andi (o API de Claude/GPT) | Ninguna llave; no alcanza a la bóveda ni al guardián |
 
 En Docker, cada servicio corre en su contenedor con su red. El guardián y la bóveda están en redes internas sin salida a internet, y el guardián tiene el disco en solo lectura. Esto se verificó desde dentro de los contenedores.
+
+### La bóveda es efímera
+
+La bóveda **no guarda nada en disco**: ni los datos cifrados ni la bitácora. Un archivo así sería un blanco de robo y dejaría los datos vivos después de la conversación.
+
+- Los marcadores y sus datos cifrados viven **solo en la memoria** del servicio, separados por conversación.
+- Cada conversación **vence tras 30 minutos sin actividad** (`VAULT_SESSION_TTL_SECONDS`, por defecto 1800). Cada mensaje renueva el plazo.
+- Hay un tope de conversaciones simultáneas (`VAULT_MAX_SESSIONS`, por defecto 1000). Al llegar al tope se borra la de actividad más antigua.
+- Al **cerrar sesión**, la tienda le pide a la bóveda borrar las conversaciones seguras de ese usuario (`DELETE /session/{id}`).
+- Si se reinicia la bóveda, todo se pierde.
+- Cuando una conversación vence, sus marcadores ya no se pueden reidentificar ni resolver: la respuesta muestra `[CORREO_1]` en vez del dato, sin errores.
+
+**Ojo:** mientras la conversación está abierta, los datos cifrados siguen en la memoria del proceso de la bóveda. Alguien con acceso a esa memoria y a la llave privada podría leerlos durante ese tiempo.
 
 ## Resultados
 
@@ -126,7 +139,7 @@ python -m scripts.train_guardian
 python -m scripts.train_bot
 ```
 
-- `pytest -q`: 62 pruebas, incluidas las de aislamiento, inicio de sesión, carrito, pedidos y control de acceso.
+- `pytest -q`: 68 pruebas, incluidas las de aislamiento, bóveda efímera, inicio de sesión, carrito, pedidos y control de acceso.
 - `python -m scripts.evaluate`: evaluación con los servicios en memoria.
 - `python -m scripts.evaluate --live`: evaluación contra los servicios de `run_all`.
 - `python -m scripts.train_guardian`: reentrena el guardián (unos 4 minutos).
@@ -146,20 +159,22 @@ Copia `.env.example` a `.env` y pon `CHATBOT_LLM_PROVIDER=anthropic` y `CHATBOT_
 - No hay recuperación de contraseña por correo ni segundo factor.
 - Los pagos (PSE y tarjeta) son simulados: no se conecta a una pasarela real.
 - `/api/admin/logs/unsecure` expone el log crudo; solo el administrador puede verlo.
-- No hay rotación de llaves ni política de retención en la bóveda.
+- No hay rotación de llaves en la bóveda.
+- Mientras una conversación está abierta (hasta 30 minutos después del último mensaje, o hasta cerrar sesión), sus datos cifrados siguen en la memoria de la bóveda.
+- Si la tienda sigue una conversación cuyo plazo venció en la bóveda, los marcadores viejos del historial ya no se reidentifican, y la bóveda vuelve a numerar desde `_1`.
 
 ## Estructura
 
 ```
 app/        Tienda (monolito): main, db (SQLite), security (login), routers (auth, store, secure, unsecure, demo), clients, pedidos, logs
 guardian/   Servicio guardián: engine, recognizers, crypto (llave pública) y training/ (datos sintéticos + entrenamiento)
-vault/      Servicio bóveda: store (llave privada, datos cifrados, bitácora)
+vault/      Servicio bóveda: store (llave privada, datos cifrados en memoria con vencimiento, bitácora en memoria)
 chatbot/    Servicio chatbot: Andi (training, assistant) + proveedores Claude/GPT
 common/     Formato de marcadores, autenticación entre servicios, conexión en memoria para pruebas
 static/     Página web (index.html, app.js, styles.css) e imágenes de producto
 data/       seed/ (catálogo y usuarios de prueba), db/ (base de datos), datasets de prueba, corpus del chatbot, resultados
 models/     guardian_ner/ (modelo guardián), reportes de entrenamiento
 scripts/    setup_secrets, run_all, train_guardian, train_bot, evaluate, make_product_images
-tests/      62 pruebas (flujos, guardián, aislamiento, chatbot, tienda, inicio de sesión)
+tests/      68 pruebas (flujos, guardián, aislamiento, chatbot, tienda, inicio de sesión)
 secrets/    Llaves y tokens (generados, nunca se versionan)
 ```
