@@ -31,7 +31,7 @@ Línea base: `9844c90` · Entorno: localhost con datos ficticios.
 | OWASP ZAP baseline | 7 WARN | 4 WARN (0 FAIL) | `docs/evidencias/zap-antes.html`, `zap-despues.html` |
 | pytest | 68 | 75 (incluye 7 nuevas) | `tests/test_security_headers.py` |
 
-Validación manual: antes, `curl -sI http://localhost:8000/` no devolvía `Content-Security-Policy` ni `X-Frame-Options`; después devuelve ambos.
+Validación manual: antes, `curl -sI http://localhost:8077/` no devolvía `Content-Security-Policy` ni `X-Frame-Options`; después devuelve ambos.
 
 ### Checklist de seguridad del Pull Request
 - [x] El cambio tiene una descripción funcional y un alcance definido.

@@ -1,6 +1,7 @@
 # Guion de la demo — Lab. 05 (5 minutos, 3 personas)
 
 Proyecto: FDSI-GP-04 — Andes Market · Rama: `security/lab-fsi` · Línea base: `9844c90`
+Expositores: Johan, Sara y Camilo
 Soporte: [SECURITY.md](SECURITY.md) · [REPORTE_HALLAZGOS.md](REPORTE_HALLAZGOS.md)
 
 | Tiempo | Quién | Bloque |
@@ -44,6 +45,8 @@ Soporte: [SECURITY.md](SECURITY.md) · [REPORTE_HALLAZGOS.md](REPORTE_HALLAZGOS.
 ---
 
 ## Comandos exactos de la demo
+
+> **Nota sobre los puertos.** La evidencia registrada en `SECURITY.md`, `REPORTE_HALLAZGOS.md` y los informes ZAP se generó con la app en `http://localhost:8077`. En la demostración en vivo usamos puertos distintos para tener las dos versiones corriendo al mismo tiempo: **8001** para la línea base (antes) y **8000** para la versión corregida (después). El puerto no cambia el resultado: los encabezados dependen del código, no del puerto.
 
 Preparar la versión **antes** (línea base `9844c90`) en una carpeta aparte, sin tocar la rama actual:
 
