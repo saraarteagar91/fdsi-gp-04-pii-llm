@@ -1,7 +1,7 @@
 # Informe técnico de hallazgos
 
 **Proyecto:** FDSI-GP-04 — Andes Market (protección de PII en chat con LLM)
-**Integrantes:** [completar]
+**Integrantes:** Johan Sebastián Beltrán, Sara Arteaga, Camilo Vivas
 **Repositorio / commit:** https://github.com/saraarteagar91/fdsi-gp-04-pii-llm — línea base `9844c90`, rama `security/lab-fsi`
 **Entorno autorizado:** entorno local del equipo (`http://localhost:8077`, Docker para ZAP), datos ficticios
 **Fecha:** 2026-11-04

@@ -1,7 +1,7 @@
 # Seguridad del proyecto — evidencia del laboratorio
 
 ## 1. Alcance autorizado
-- Repositorio: https://github.com/saraarteagar91/fdsi-gp-04-pii-llm (privado)
+- Repositorio: https://github.com/saraarteagar91/fdsi-gp-04-pii-llm (público)
 - Rama evaluada y commit de línea base: `experimentos` / `9844c9028f4b35d05586b7c1604dd200c8f9c127`
 - Rama del laboratorio: `security/lab-fsi`
 - Tecnología: Python 3.12, FastAPI + Uvicorn, SQLite, Presidio/spaCy (guardián de PII), PyNaCl (cifrado), LLM externo compatible con OpenAI (Gemini) o Claude.
@@ -18,7 +18,7 @@
 | Herramienta | Tipo | Fecha | Resultado (antes → después) | Enlace a evidencia |
 |---|---|---|---|---|
 | Semgrep 1.183 (`p/owasp-top-ten`, `p/secrets`) | SAST | 2026-11-04 | 6 → 0 (acciones de GitHub con tag mutable) | [antes](evidencias/semgrep-antes.json) · [después](evidencias/semgrep-despues.json) · artefacto `resultado-semgrep` en Actions |
-| CodeQL Default setup | SAST | — | Pendiente: requiere GitHub Advanced Security en repos privados | Settings → Advanced Security |
+| CodeQL Default setup | SAST | — | Pendiente de activar en Settings → Advanced Security (disponible al ser repo público) | Settings → Advanced Security |
 | Gitleaks 8 (historial completo, 8 commits) | Secretos | 2026-11-04 | 0 secretos | [gitleaks.json](evidencias/gitleaks.json) · job `Gitleaks` en Actions |
 | pip-audit (entorno `.venv`) / Dependabot | SCA | 2026-11-04 | 20 avisos en 3 paquetes (certifi, filelock, setuptools) | [pip-audit.json](evidencias/pip-audit.json) |
 | OWASP ZAP Baseline (Docker, pasivo) | DAST pasivo | 2026-11-04 | 7 → 4 alertas WARN, 0 FAIL | [antes](evidencias/zap-antes.html) · [después](evidencias/zap-despues.html) |
@@ -49,7 +49,8 @@
 - Recomendación y prueba de regresión: `tests/test_security_headers.py` comprueba los encabezados en `/`, archivos estáticos, `/health` y un 404, y que `script-src` no permita `unsafe-inline` ni `unsafe-eval`.
 
 ## 6. Limitaciones
-- El repositorio es privado: CodeQL Default setup y secret scanning nativo requieren GitHub Advanced Security. Si no aparecen en Settings, se documenta como limitación del plan; Semgrep y Gitleaks cubren SAST y secretos.
+- El repositorio es público, así que CodeQL Default setup y secret scanning nativo están disponibles sin costo. Sus resultados se registrarán cuando se activen en Settings → Advanced Security. Mientras tanto, Semgrep y Gitleaks cubren SAST y secretos.
+- Al ser público, cualquier persona puede ver las evidencias de `docs/evidencias/`. Solo contienen datos ficticios y `localhost`.
 - Activar Dependabot y los controles de Settings requiere permisos de administrador del repositorio.
 - El DAST es pasivo y local: no evalúa TLS/HSTS (no hay HTTPS) ni las respuestas del LLM.
 - Un pipeline en verde no significa que la aplicación sea segura: Semgrep y ZAP corren con `|| true` / `-I`.
