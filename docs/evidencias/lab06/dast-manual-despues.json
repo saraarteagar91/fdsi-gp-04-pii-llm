@@ -1,0 +1,95 @@
+[
+  {
+    "id": "D-01",
+    "prueba": "Login de admin con la contraseña publicada en el repo",
+    "esperado": "401",
+    "observado": 401,
+    "resultado": "PASA"
+  },
+  {
+    "id": "D-02",
+    "prueba": "Cliente accede a /api/admin/demo-data",
+    "esperado": "403",
+    "observado": 403,
+    "resultado": "PASA"
+  },
+  {
+    "id": "D-03",
+    "prueba": "Cliente accede a /unsecure/chat",
+    "esperado": "403",
+    "observado": 403,
+    "resultado": "PASA"
+  },
+  {
+    "id": "D-04",
+    "prueba": "Cliente pide un pedido ajeno por código (IDOR)",
+    "esperado": "404",
+    "observado": 404,
+    "resultado": "PASA"
+  },
+  {
+    "id": "D-05",
+    "prueba": "Pedidos sin sesión",
+    "esperado": "401",
+    "observado": 401,
+    "resultado": "PASA"
+  },
+  {
+    "id": "D-06",
+    "prueba": "6 intentos fallidos sobre el mismo correo",
+    "esperado": "429 en el 6.º",
+    "observado": [
+      401,
+      401,
+      401,
+      401,
+      401,
+      429
+    ],
+    "resultado": "PASA"
+  },
+  {
+    "id": "D-07",
+    "prueba": "8 intentos de 'contraseña actual' en cambio de contraseña",
+    "esperado": "429 tras 5",
+    "observado": [
+      401,
+      401,
+      401,
+      401,
+      401,
+      429,
+      429,
+      429
+    ],
+    "resultado": "PASA"
+  },
+  {
+    "id": "D-08",
+    "prueba": "Nombre con payload XSS: el front lo escapa al pintarlo",
+    "esperado": "escapado",
+    "observado": "escapado",
+    "resultado": "PASA"
+  },
+  {
+    "id": "D-09",
+    "prueba": "Mensaje de 2001 caracteres al chat",
+    "esperado": "422",
+    "observado": 422,
+    "resultado": "PASA"
+  },
+  {
+    "id": "D-10",
+    "prueba": "Encabezados CSP / X-Frame-Options / nosniff",
+    "esperado": "presentes",
+    "observado": "presentes",
+    "resultado": "PASA"
+  },
+  {
+    "id": "D-11",
+    "prueba": "Cookie de sesión HttpOnly + SameSite",
+    "esperado": "httponly; samesite=lax",
+    "observado": "httponly; max-age=28800; path=/; samesite=lax",
+    "resultado": "PASA"
+  }
+]

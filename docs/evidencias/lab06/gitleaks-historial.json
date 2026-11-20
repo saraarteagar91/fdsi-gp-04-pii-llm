@@ -1,0 +1,23 @@
+[
+ {
+  "RuleID": "generic-api-key",
+  "Description": "Detected a Generic API Key, potentially exposing access to various services and sensitive operations.",
+  "StartLine": 1,
+  "EndLine": 1,
+  "StartColumn": 204061,
+  "EndColumn": 204099,
+  "Match": "token=REDACTED ",
+  "Secret": "REDACTED",
+  "File": "docs/evidencias/pip-audit.json",
+  "SymlinkFile": "",
+  "Commit": "0fd9f9eecbf48bfda9b2d79262afb6f7bea2d843",
+  "Link": "https://github.com/saraarteagar91/fdsi-gp-04-pii-llm/blob/0fd9f9eecbf48bfda9b2d79262afb6f7bea2d843/docs/evidencias/pip-audit.json#L1",
+  "Entropy": 3.691428,
+  "Author": "jsebastianBeltran2002",
+  "Email": "johan.beltran-g@mail.escuelaing.edu.co",
+  "Date": "2026-11-04T22:43:37Z",
+  "Message": "Lab 05: integrar SAST, secretos, SCA y DAST; corregir encabezados de seguridad",
+  "Tags": [],
+  "Fingerprint": "0fd9f9eecbf48bfda9b2d79262afb6f7bea2d843:docs/evidencias/pip-audit.json:generic-api-key:1"
+ }
+]

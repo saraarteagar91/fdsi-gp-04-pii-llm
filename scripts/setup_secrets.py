@@ -6,6 +6,8 @@ que ningún servicio reciba lo que no necesita:
   secrets/guardian/pepper.key   pimienta del índice ciego         -> guardián
   secrets/vault/private.key     llave PRIVADA (descifra)          -> bóveda
   secrets/env/<servicio>.env    tokens entre servicios
+  secrets/env/app.env           + APP_ADMIN_PASSWORD (contraseña aleatoria
+                                del administrador, Lab. 06 F-07)
 
 La tienda recibe los tres tokens pero ninguna llave.
 
@@ -47,6 +49,11 @@ def setup(root: Path = ROOT, force: bool = False) -> dict[str, str]:
         _write(env_dir / "vault.env", f"VAULT_TOKEN={tokens['vault']}\n")
         _write(env_dir / "chatbot.env", f"CHATBOT_TOKEN={tokens['chatbot']}\n")
         _write(tokens_file, "".join(f"APP_{s.upper()}_TOKEN={t}\n" for s, t in tokens.items()))
+    # Lab. 06 (F-07): la contraseña del administrador ya no está en el repo.
+    # Se genera al azar aquí (también en instalaciones viejas que no la tienen).
+    if "APP_ADMIN_PASSWORD" not in read_env(tokens_file):
+        with tokens_file.open("a", encoding="utf-8") as f:
+            f.write(f"APP_ADMIN_PASSWORD={secrets.token_urlsafe(18)}\n")
     return {"private": str(private_path), "public": str(public_path), "pepper": str(pepper_path)}
 
 
@@ -65,3 +72,4 @@ if __name__ == "__main__":
     for name, p in paths.items():
         print(f"  {name:8s} {p}")
     print(f"  tokens   {ROOT / 'env'}")
+    print(f"  admin    contraseña en {ROOT / 'env' / 'app.env'} (APP_ADMIN_PASSWORD)")

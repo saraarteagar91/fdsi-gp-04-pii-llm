@@ -30,6 +30,7 @@ services:
     env_file:
       - secrets/env/app.env
     environment:
+      PORT: "8000"  # para el HEALTHCHECK de la imagen (Lab. 06)
       APP_GUARDIAN_URL: http://guardian:8101
       APP_VAULT_URL: http://vault:8102
       APP_CHATBOT_URL: http://chatbot:8103
@@ -55,6 +56,7 @@ services:
     env_file:
       - secrets/env/guardian.env
     environment:
+      PORT: "8101"
       GUARDIAN_PUBLIC_KEY_PATH: /run/secrets/guardian/public.key
       GUARDIAN_PEPPER_PATH: /run/secrets/guardian/pepper.key
     volumes:
@@ -68,6 +70,7 @@ services:
     env_file:
       - secrets/env/vault.env
     environment:
+      PORT: "8102"
       VAULT_PRIVATE_KEY_PATH: /run/secrets/vault/private.key
     volumes:
       - ./secrets/vault:/run/secrets/vault:ro
@@ -81,6 +84,8 @@ services:
       - secrets/env/chatbot.env
       - path: .env
         required: false
+    environment:
+      PORT: "8103"
     networks:
       - red_chatbot
 

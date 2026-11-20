@@ -18,7 +18,7 @@ No habla con el chatbot ni con el guardián; solo atiende a la tienda.
 import re
 
 from fastapi import Depends, FastAPI, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from common.auth import require_token
 from common.tokens import TOKEN_RE
@@ -39,12 +39,12 @@ class EncryptedEntity(BaseModel):
 
 class TokensIn(BaseModel):
     session_id: str
-    entities: list[EncryptedEntity]
+    entities: list[EncryptedEntity] = Field(max_length=200)  # Lab. 06 (F-11, CWE-770)
 
 
 class ReidentifyIn(BaseModel):
     session_id: str
-    text: str
+    text: str = Field(max_length=20000)  # Lab. 06 (F-11, CWE-770)
 
 
 class ResolveIn(BaseModel):

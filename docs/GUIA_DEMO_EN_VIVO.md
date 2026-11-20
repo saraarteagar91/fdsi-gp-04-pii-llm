@@ -19,7 +19,7 @@ Qué mostrar, en qué orden y qué decir. La clave de Gemini permite **solo 6 pr
 
 Entren con **Ingresar**:
 - Correo: `admin@andesmarket.co`
-- Contraseña: `Seguridad#2026`
+- Contraseña: la de `APP_ADMIN_PASSWORD` en `secrets/env/app.env` (Lab. 06: ya no hay una contraseña de admin fija)
 
 Abran el chat con el botón de abajo a la derecha.
 

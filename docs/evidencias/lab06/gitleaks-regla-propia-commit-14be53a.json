@@ -1,0 +1,23 @@
+[
+ {
+  "RuleID": "credencial-en-datos",
+  "Description": "Contraseña en claro en un archivo de datos (seed, fixture)",
+  "StartLine": 4,
+  "EndLine": 4,
+  "StartColumn": 40,
+  "EndColumn": 67,
+  "Match": "\"password\": \"REDACTED\"",
+  "Secret": "REDACTED",
+  "File": "data/seed/usuarios_demo.json",
+  "SymlinkFile": "",
+  "Commit": "14be53abd676832827a44a7565d5bfa237fe6bf2",
+  "Link": "https://github.com/saraarteagar91/fdsi-gp-04-pii-llm/blob/14be53abd676832827a44a7565d5bfa237fe6bf2/data/seed/usuarios_demo.json#L4",
+  "Entropy": 3.5216405,
+  "Author": "Andres Vivas",
+  "Email": "andres.vivas-b@mail.escuelaing.edu.co",
+  "Date": "2026-10-15T04:24:32Z",
+  "Message": "Adelanto de seminario",
+  "Tags": [],
+  "Fingerprint": "14be53abd676832827a44a7565d5bfa237fe6bf2:data/seed/usuarios_demo.json:credencial-en-datos:4"
+ }
+]

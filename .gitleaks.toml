@@ -1,0 +1,26 @@
+# Configuración de Gitleaks del proyecto (Lab. 06, Secret Detection).
+# Extiende las reglas por defecto con una regla propia y descarta los
+# falsos positivos ya revisados.
+title = "fdsi-gp-04 gitleaks"
+
+[extend]
+useDefault = true
+
+# F-07: las reglas por defecto NO detectaron la contraseña del administrador
+# escrita en data/seed/usuarios_demo.json. Esta regla busca contraseñas en
+# claro dentro de archivos JSON/YAML de datos.
+[[rules]]
+id = "credencial-en-datos"
+description = "Contraseña en claro en un archivo de datos (seed, fixture)"
+regex = '''"password"\s*:\s*"([^"]{6,})"'''
+secretGroup = 1
+path = '''\.(json|ya?ml)$'''
+keywords = ["password"]
+  # Clientes de prueba (datos ficticios, riesgo aceptado y documentado en
+  # docs/REPORTE_HALLAZGOS_LAB06.md). Una cuenta admin no puede seguir este patrón.
+  [[rules.allowlists]]
+  regexes = ['''^[A-Z][a-z]+#Andes2026$''']
+
+[[allowlists]]
+description = "Reportes de herramientas (hashes de paquetes, IDs de CVE): falsos positivos revisados"
+paths = ['''^docs/evidencias/''']

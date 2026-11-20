@@ -62,7 +62,10 @@ def demo_password(email: str) -> str:
     import json
 
     users = json.loads(Path("data/seed/usuarios_demo.json").read_text(encoding="utf-8"))["usuarios"]
-    return next(u["password"] for u in users if u["email"] == email)
+    user = next(u for u in users if u["email"] == email)
+    if user["rol"] == "admin":  # Lab. 06 (F-07): la del admin solo está en secrets/
+        return os.environ["APP_ADMIN_PASSWORD"]
+    return user["password"]
 
 
 def logged_client(email: str):

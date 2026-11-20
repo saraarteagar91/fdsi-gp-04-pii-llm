@@ -99,9 +99,15 @@ class PasswordIn(BaseModel):
 
 @router.put("/password")
 def change_password(body: PasswordIn, request: Request, response: Response, user: dict = Depends(security.require_user)) -> dict:
+    # Lab. 06 (F-09): con una sesión robada se podía adivinar la contraseña
+    # actual sin límite. Ahora aplica el mismo bloqueo que el login.
+    attempts_key = f"cambio-clave:{user['id']}"
+    security.check_rate_limit(attempts_key)
     row = db.one("SELECT password_hash FROM usuarios WHERE id = ?", (user["id"],))
     if not security.verify_password(body.actual, row["password_hash"]):
+        security.register_failure(attempts_key)
         raise HTTPException(status_code=401, detail="La contraseña actual no es correcta.")
+    security.clear_failures(attempts_key)
     security.validate_new_password(body.nueva)
     db.execute("UPDATE usuarios SET password_hash = ? WHERE id = ?", (security.hash_password(body.nueva), user["id"]))
     # cerrar las demás sesiones abiertas y abrir una nueva

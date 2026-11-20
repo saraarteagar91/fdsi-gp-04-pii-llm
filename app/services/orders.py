@@ -7,6 +7,7 @@ el chat escriba el correo, la cédula o el código de pedido de otra persona
 """
 import random
 import re
+import secrets
 from datetime import date, timedelta
 
 from app import db
@@ -88,7 +89,9 @@ def create_order(user: dict, direccion: str, ciudad: str, metodo_pago: str) -> d
             if item["cantidad"] > item["stock"]:
                 raise ValueError(f"Solo quedan {item['stock']} unidades de {item['nombre']}.")
         while True:
-            code = f"AM-{random.randint(10700, 99999)}"
+            # Lab. 06 (F-10, Bandit B311): el código de pedido sirve para consultarlo
+            # en el chat; se genera con un generador criptográfico, no con random.
+            code = f"AM-{10700 + secrets.randbelow(99999 - 10700 + 1)}"
             if not c.execute("SELECT 1 FROM pedidos WHERE codigo = ?", (code,)).fetchone():
                 break
         total = sum(i["precio"] * i["cantidad"] for i in cart)
@@ -99,7 +102,7 @@ def create_order(user: dict, direccion: str, ciudad: str, metodo_pago: str) -> d
         cur = c.execute(
             "INSERT INTO pedidos (codigo, usuario_id, estado, transportadora, fecha_entrega, total, direccion_envio, metodo_pago, creado)"
             " VALUES (?,?,?,?,?,?,?,?,?)",
-            (code, user["id"], estado, random.choice(CARRIERS), eta, total, f"{direccion}, {ciudad}", metodo_pago, date.today().isoformat()),
+            (code, user["id"], estado, random.choice(CARRIERS), eta, total, f"{direccion}, {ciudad}", metodo_pago, date.today().isoformat()),  # nosec B311 (transportadora)
         )
         for i in cart:
             c.execute("INSERT INTO pedido_items VALUES (?,?,?,?)", (cur.lastrowid, i["producto_id"], i["cantidad"], i["precio"]))

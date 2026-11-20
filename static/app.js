@@ -812,10 +812,17 @@
       }
     }
 
+    // Lab. 06 (F-08): antes se decidía si el contenido era HTML mirando si
+    // empezaba por "<div", así que un mensaje o una respuesta del LLM que
+    // empezara así se pintaba sin escapar (XSS en el panel de auditoría).
+    // Ahora solo se acepta HTML marcado explícitamente con trusted().
+    const TRUSTED = Symbol("trusted-html");
+    const trusted = (html) => ({ [TRUSTED]: html });
     function step(title, content, cls) {
-      return `<div class="audit-step ${cls || ""}"><h4>${title}</h4>${content.startsWith("<div") ? content : `<pre>${esc(content)}</pre>`}</div>`;
+      const body = content && content[TRUSTED] !== undefined ? content[TRUSTED] : `<pre>${esc(content)}</pre>`;
+      return `<div class="audit-step ${cls || ""}"><h4>${title}</h4>${body}</div>`;
     }
-    const pills = (items, bad) => `<div class="pill-list">${items.length ? items.map((t) => `<span class="pill ${bad ? "bad" : ""}">${esc(t)}</span>`).join("") : '<span class="muted small">Ninguno</span>'}</div>`;
+    const pills = (items, bad) => trusted(`<div class="pill-list">${items.length ? items.map((t) => `<span class="pill ${bad ? "bad" : ""}">${esc(t)}</span>`).join("") : '<span class="muted small">Ninguno</span>'}</div>`);
 
     function showAudit(idx) {
       const d = audits[idx];

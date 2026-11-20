@@ -70,6 +70,10 @@ SECURITY_HEADERS = {
     "Referrer-Policy": "no-referrer",
     "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=()",
     "Cross-Origin-Opener-Policy": "same-origin",
+    # Lab. 06 (ZAP 90004): la página solo usa recursos propios, así que se
+    # aísla también de inclusiones desde otros orígenes.
+    "Cross-Origin-Resource-Policy": "same-origin",
+    "Cross-Origin-Embedder-Policy": "require-corp",
 }
 # Swagger UI (/docs) y ReDoc cargan scripts desde un CDN: se les deja sin CSP
 # para no romper la documentación de la API durante el desarrollo.

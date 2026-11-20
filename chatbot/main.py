@@ -13,7 +13,7 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import Depends, FastAPI
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from chatbot.config import settings
 from chatbot.training import REPORT_FILENAME
@@ -82,9 +82,10 @@ app = FastAPI(title="Chatbot Andi — FDSI-GP-04", version="1.0.0", lifespan=lif
 auth = Depends(require_token(lambda: settings.token))
 
 
+# Lab. 06 (F-11, CWE-770): tamaño máximo para no procesar cuerpos sin límite.
 class ChatIn(BaseModel):
-    message: str
-    history: list[dict] = []
+    message: str = Field(max_length=20000)
+    history: list[dict] = Field(default_factory=list, max_length=40)
 
 
 @app.post("/chat", dependencies=[auth])

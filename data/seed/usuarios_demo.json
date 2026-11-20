@@ -1,7 +1,7 @@
 {
-  "aviso": "Usuarios de PRUEBA para el ambiente local del seminario. Datos ficticios. Las contraseñas solo existen aquí y en la base de datos como hash scrypt; cámbienlas si despliegan la aplicación fuera de su equipo.",
+  "aviso": "Usuarios de PRUEBA para el ambiente local del seminario. Datos ficticios. Las contraseñas de los clientes solo existen aquí y en la base de datos como hash scrypt. La del administrador NO está aquí (Lab. 06, F-07): se genera al azar en secrets/env/app.env (APP_ADMIN_PASSWORD); cámbienlas si despliegan la aplicación fuera de su equipo.",
   "usuarios": [
-    {"email": "admin@andesmarket.co", "password": "Seguridad#2026", "rol": "admin",
+    {"email": "admin@andesmarket.co", "rol": "admin",
      "nombre": "Equipo de Seguridad FDSI-GP-04", "cedula": null, "telefono": null, "direccion": null, "ciudad": null},
     {"email": "juan.perez@gmail.com", "password": "Juan#Andes2026", "rol": "cliente",
      "nombre": "Juan Carlos Pérez Gómez", "cedula": "1020304050", "telefono": "3001234567", "direccion": "Calle 80 # 12-34 Apto 502", "ciudad": "Bogotá"},

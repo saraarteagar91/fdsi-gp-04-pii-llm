@@ -14,6 +14,9 @@ class Settings(BaseSettings):
     guardian_token: str = ""
     vault_token: str = ""
     chatbot_token: str = ""
+    # Contraseña del administrador (Lab. 06, F-07). La genera
+    # scripts/setup_secrets.py en secrets/env/app.env; nunca va en el repo.
+    admin_password: str = ""
     service_timeout_s: float = 30.0
 
     db_path: str = "data/db/andes_market.db"

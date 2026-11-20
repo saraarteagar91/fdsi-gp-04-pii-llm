@@ -91,7 +91,22 @@ def conn() -> sqlite3.Connection:
             _conn.executescript(SCHEMA)
             if _conn.execute("SELECT COUNT(*) FROM usuarios").fetchone()[0] == 0:
                 _seed(_conn)
+            _sync_admin_password(_conn)
         return _conn
+
+
+def _sync_admin_password(c: sqlite3.Connection) -> None:
+    """Lab. 06 (F-07): las bases creadas antes guardan el hash de la
+    contraseña de administrador que se publicó en el repositorio. Al
+    arrancar, si APP_ADMIN_PASSWORD está definida y no coincide, se rota."""
+    from app.security import hash_password, verify_password
+
+    if not settings.admin_password:
+        return
+    for row in c.execute("SELECT id, password_hash FROM usuarios WHERE rol = 'admin'").fetchall():
+        if not verify_password(settings.admin_password, row["password_hash"]):
+            c.execute("UPDATE usuarios SET password_hash = ? WHERE id = ?", (hash_password(settings.admin_password), row["id"]))
+            c.execute("DELETE FROM sesiones WHERE usuario_id = ?", (row["id"],))
 
 
 def query(sql: str, params: tuple = ()) -> list[dict]:
@@ -140,9 +155,17 @@ def _seed(c: sqlite3.Connection) -> None:
             (p["sku"], p["nombre"], p["categoria"], p["precio"], p["precio_antes"], p["descripcion"], p["stock"], p["rating"], p["reviews"], p["destacado"]),
         )
     for u in demo["usuarios"]:
+        password = u.get("password")
+        if u["rol"] == "admin":
+            # Lab. 06 (F-07): la cuenta de administrador nunca tiene una
+            # contraseña conocida; sale de secrets/env/app.env.
+            password = settings.admin_password
+            if not password:
+                print("AVISO: APP_ADMIN_PASSWORD vacía; no se crea el administrador (python -m scripts.setup_secrets)")
+                continue
         c.execute(
             "INSERT INTO usuarios (email, password_hash, nombre, cedula, telefono, direccion, ciudad, rol) VALUES (?,?,?,?,?,?,?,?)",
-            (u["email"], hash_password(u["password"]), u["nombre"], u["cedula"], u["telefono"], u["direccion"], u["ciudad"], u["rol"]),
+            (u["email"], hash_password(password), u["nombre"], u["cedula"], u["telefono"], u["direccion"], u["ciudad"], u["rol"]),
         )
     for o in demo["pedidos"]:
         user = c.execute("SELECT id, direccion, ciudad FROM usuarios WHERE email = ?", (o["email"],)).fetchone()

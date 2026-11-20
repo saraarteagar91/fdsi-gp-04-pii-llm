@@ -1,12 +1,14 @@
 # Cómo correr Andes Market en otro computador
 
-> ⚠️ Este archivo contiene contraseñas de **usuarios de prueba**. Sirven solo para el ambiente local del seminario. Si suben el proyecto a un repositorio público, quiten este archivo o cambien las contraseñas.
+> 🔐 **Lab. 06 (F-07):** la contraseña del administrador ya no está en el repositorio. Cada equipo tiene la suya, aleatoria, en `secrets/env/app.env` (`APP_ADMIN_PASSWORD`), que nunca se sube. Si tenían una base vieja, la tienda rota la contraseña del admin al arrancar.
+>
+> ⚠️ Este archivo contiene contraseñas de **clientes de prueba**. Sirven solo para el ambiente local del seminario. Si suben el proyecto a un repositorio público, quiten este archivo o cambien las contraseñas.
 
 ## 1. Credenciales para entrar a la aplicación
 
 | Rol | Correo | Contraseña | Qué puede hacer |
 |---|---|---|---|
-| **Administrador** | `admin@andesmarket.co` | `Seguridad#2026` | Todo lo de un cliente, más el **Centro de seguridad**, el **modo inseguro** del chat y la auditoría de cada mensaje |
+| **Administrador** | `admin@andesmarket.co` | Aleatoria: `APP_ADMIN_PASSWORD` en `secrets/env/app.env` (la crea `python -m scripts.setup_secrets`) | Todo lo de un cliente, más el **Centro de seguridad**, el **modo inseguro** del chat y la auditoría de cada mensaje |
 | Cliente | `juan.perez@gmail.com` | `Juan#Andes2026` | Comprar, ver sus pedidos (AM-10231, AM-09874) y usar el chat |
 | Cliente | `sara.arteaga@correo.edu.co` | `Sara#Andes2026` | Pedido AM-10458 |
 | Cliente | `maria.rodriguez@outlook.com` | `Maria#Andes2026` | Pedido AM-10512 |

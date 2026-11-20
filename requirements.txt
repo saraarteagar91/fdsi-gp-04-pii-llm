@@ -17,6 +17,11 @@ httpx>=0.27
 # Lab. 05 (SCA, F-03): certifi < 2026.10.18 confía en la raíz emSign ECC G3
 # retirada (GHSA-6q48-6c7w-9gw2); httpx la usa para el TLS hacia el LLM.
 certifi>=2026.10.18
+# Lab. 06 (SCA): mínimos con los avisos de pip-audit corregidos.
+#  - opentelemetry-api (la traen fastapi/anthropic): ReDoS en traceparent, CVE-2026-126360
+#  - filelock (la trae tldextract): 17 CVE corregidos en 4.2.1
+opentelemetry-api>=1.45.2
+filelock>=4.2.1
 
 # --- LLM comercial opcional (Claude) ---
 anthropic>=0.34

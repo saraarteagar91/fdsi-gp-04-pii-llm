@@ -14,7 +14,7 @@ Garantías de diseño (verificadas en tests/test_isolation.py):
 from contextlib import asynccontextmanager
 
 from fastapi import Depends, FastAPI
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from common.auth import require_token
 from common.tokens import ENTITY_LABELS, REDACTION_TOKEN
@@ -34,8 +34,9 @@ app = FastAPI(title="Guardián PII — FDSI-GP-04", version="1.0.0", lifespan=li
 auth = Depends(require_token(lambda: settings.token))
 
 
+# Lab. 06 (F-11, CWE-770): tamaño máximo para no procesar cuerpos sin límite.
 class TextIn(BaseModel):
-    text: str
+    text: str = Field(max_length=20000)
 
 
 class ProtectedEntity(BaseModel):

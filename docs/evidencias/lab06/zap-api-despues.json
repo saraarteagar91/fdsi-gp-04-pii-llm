@@ -1,0 +1,1113 @@
+{
+	"@programName": "ZAP",
+	"@version": "2.17.0",
+	"@generated": "Fri, 20 Nov 2026 02:10:41",
+	"created": "2026-11-20T02:10:41.228833736Z",
+	"insights":[
+		{
+			"level": "Medium",
+			"reason": "Exceeded High",
+			"site": "http://host.docker.internal:8000",
+			"key": "insight.code.4xx",
+			"description": "Percentage of responses with status code 4xx",
+			"statistic": "88"
+		},
+		{
+			"level": "Info",
+			"reason": "Informational",
+			"site": "http://host.docker.internal:8000",
+			"key": "insight.code.2xx",
+			"description": "Percentage of responses with status code 2xx",
+			"statistic": "11"
+		},
+		{
+			"level": "Info",
+			"reason": "Informational",
+			"site": "http://host.docker.internal:8000",
+			"key": "insight.endpoint.ctype.application/json",
+			"description": "Percentage of endpoints with content type application/json",
+			"statistic": "98"
+		},
+		{
+			"level": "Info",
+			"reason": "Informational",
+			"site": "http://host.docker.internal:8000",
+			"key": "insight.endpoint.ctype.text/html",
+			"description": "Percentage of endpoints with content type text/html",
+			"statistic": "1"
+		},
+		{
+			"level": "Info",
+			"reason": "Informational",
+			"site": "http://host.docker.internal:8000",
+			"key": "insight.endpoint.method.DELETE",
+			"description": "Percentage of endpoints with method DELETE",
+			"statistic": "2"
+		},
+		{
+			"level": "Info",
+			"reason": "Informational",
+			"site": "http://host.docker.internal:8000",
+			"key": "insight.endpoint.method.GET",
+			"description": "Percentage of endpoints with method GET",
+			"statistic": "65"
+		},
+		{
+			"level": "Info",
+			"reason": "Informational",
+			"site": "http://host.docker.internal:8000",
+			"key": "insight.endpoint.method.POST",
+			"description": "Percentage of endpoints with method POST",
+			"statistic": "25"
+		},
+		{
+			"level": "Info",
+			"reason": "Informational",
+			"site": "http://host.docker.internal:8000",
+			"key": "insight.endpoint.method.PUT",
+			"description": "Percentage of endpoints with method PUT",
+			"statistic": "7"
+		},
+		{
+			"level": "Info",
+			"reason": "Informational",
+			"site": "http://host.docker.internal:8000",
+			"key": "insight.endpoint.total",
+			"description": "Count of total endpoints",
+			"statistic": "83"
+		}
+	],
+	"site":[ 
+		{
+			"@name": "http://host.docker.internal:8000",
+			"@host": "host.docker.internal",
+			"@port": "8000",
+			"@ssl": "false",
+			"alerts": [ 
+				{
+					"pluginid": "100001",
+					"alertRef": "100001",
+					"alert": "Unexpected Content-Type was returned",
+					"name": "Unexpected Content-Type was returned",
+					"riskcode": "1",
+					"confidence": "3",
+					"riskdesc": "Low (High)",
+					"desc": "<p>A Content-Type of text/html was returned by the server.</p><p>This is not one of the types expected to be returned by an API.</p><p>Raised by the 'Alert on Unexpected Content Types' script</p>",
+					"instances":[ 
+						{
+							"id": "29",
+							"uri": "http://host.docker.internal:8000",
+							"nodeName": "http:\/\/host.docker.internal:8000",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "text/html",
+							"otherinfo": ""
+						},
+						{
+							"id": "2892",
+							"uri": "http://host.docker.internal:8000/",
+							"nodeName": "http:\/\/host.docker.internal:8000\/",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "text/html",
+							"otherinfo": ""
+						}
+					],
+					"count": "2",
+					"systemic": false,
+					"solution": "",
+					"otherinfo": "",
+					"reference": "",
+					"cweid": "-1",
+					"wascid": "-1",
+					"sourceid": "57"
+				},
+				{
+					"pluginid": "100000",
+					"alertRef": "100000-1",
+					"alert": "A Client Error response code was returned by the server",
+					"name": "A Client Error response code was returned by the server",
+					"riskcode": "0",
+					"confidence": "3",
+					"riskdesc": "Informational (High)",
+					"desc": "<p>A response code of 401 was returned by the server.</p><p>This may indicate that the application is failing to handle unexpected input correctly.</p><p>Raised by the 'Alert on HTTP Response Code Error' script</p>",
+					"instances":[ 
+						{
+							"id": "7",
+							"uri": "http://host.docker.internal:8000/api/cart/10",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/cart\/10",
+							"method": "DELETE",
+							"param": "",
+							"attack": "",
+							"evidence": "401",
+							"otherinfo": ""
+						},
+						{
+							"id": "2880",
+							"uri": "http://host.docker.internal:8000/api/cart/10/",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/cart\/10\/",
+							"method": "DELETE",
+							"param": "",
+							"attack": "",
+							"evidence": "405",
+							"otherinfo": ""
+						},
+						{
+							"id": "19",
+							"uri": "http://host.docker.internal:8000/3801265149315902277",
+							"nodeName": "http:\/\/host.docker.internal:8000\/3801265149315902277",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "404",
+							"otherinfo": ""
+						},
+						{
+							"id": "38",
+							"uri": "http://host.docker.internal:8000/api",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "404",
+							"otherinfo": ""
+						},
+						{
+							"id": "2894",
+							"uri": "http://host.docker.internal:8000/api/",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "404",
+							"otherinfo": ""
+						},
+						{
+							"id": "20",
+							"uri": "http://host.docker.internal:8000/api/7721044548281422708",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/7721044548281422708",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "404",
+							"otherinfo": ""
+						},
+						{
+							"id": "46",
+							"uri": "http://host.docker.internal:8000/api/admin",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/admin",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "404",
+							"otherinfo": ""
+						},
+						{
+							"id": "2897",
+							"uri": "http://host.docker.internal:8000/api/admin/",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/admin\/",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "404",
+							"otherinfo": ""
+						},
+						{
+							"id": "21",
+							"uri": "http://host.docker.internal:8000/api/admin/2389684123559572252",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/admin\/2389684123559572252",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "404",
+							"otherinfo": ""
+						},
+						{
+							"id": "18",
+							"uri": "http://host.docker.internal:8000/api/admin/bot-info",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/admin\/bot-info",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "401",
+							"otherinfo": ""
+						},
+						{
+							"id": "2895",
+							"uri": "http://host.docker.internal:8000/api/admin/bot-info/",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/admin\/bot-info\/",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "404",
+							"otherinfo": ""
+						},
+						{
+							"id": "14",
+							"uri": "http://host.docker.internal:8000/api/admin/demo-data",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/admin\/demo-data",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "401",
+							"otherinfo": ""
+						},
+						{
+							"id": "2898",
+							"uri": "http://host.docker.internal:8000/api/admin/demo-data/",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/admin\/demo-data\/",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "404",
+							"otherinfo": ""
+						},
+						{
+							"id": "15",
+							"uri": "http://host.docker.internal:8000/api/admin/evaluation",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/admin\/evaluation",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "401",
+							"otherinfo": ""
+						},
+						{
+							"id": "16",
+							"uri": "http://host.docker.internal:8000/api/admin/evaluation.png",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/admin\/evaluation.png",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "401",
+							"otherinfo": ""
+						},
+						{
+							"id": "2900",
+							"uri": "http://host.docker.internal:8000/api/admin/evaluation.png/",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/admin\/evaluation.png\/",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "404",
+							"otherinfo": ""
+						},
+						{
+							"id": "2899",
+							"uri": "http://host.docker.internal:8000/api/admin/evaluation/",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/admin\/evaluation\/",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "404",
+							"otherinfo": ""
+						},
+						{
+							"id": "56",
+							"uri": "http://host.docker.internal:8000/api/admin/logs",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/admin\/logs",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "404",
+							"otherinfo": ""
+						},
+						{
+							"id": "2902",
+							"uri": "http://host.docker.internal:8000/api/admin/logs/",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/admin\/logs\/",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "404",
+							"otherinfo": ""
+						},
+						{
+							"id": "22",
+							"uri": "http://host.docker.internal:8000/api/admin/logs/2349923851683172354",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/admin\/logs\/2349923851683172354",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "401",
+							"otherinfo": ""
+						},
+						{
+							"id": "13",
+							"uri": "http://host.docker.internal:8000/api/admin/logs/scenario?limit=15",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/admin\/logs\/scenario (limit)",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "401",
+							"otherinfo": ""
+						},
+						{
+							"id": "2904",
+							"uri": "http://host.docker.internal:8000/api/admin/logs/scenario/",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/admin\/logs\/scenario\/",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "404",
+							"otherinfo": ""
+						},
+						{
+							"id": "17",
+							"uri": "http://host.docker.internal:8000/api/admin/services",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/admin\/services",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "401",
+							"otherinfo": ""
+						},
+						{
+							"id": "2903",
+							"uri": "http://host.docker.internal:8000/api/admin/services/",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/admin\/services\/",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "404",
+							"otherinfo": ""
+						},
+						{
+							"id": "66",
+							"uri": "http://host.docker.internal:8000/api/auth",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/auth",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "404",
+							"otherinfo": ""
+						},
+						{
+							"id": "2905",
+							"uri": "http://host.docker.internal:8000/api/auth/",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/auth\/",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "404",
+							"otherinfo": ""
+						},
+						{
+							"id": "23",
+							"uri": "http://host.docker.internal:8000/api/auth/1478720400143876853",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/auth\/1478720400143876853",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "404",
+							"otherinfo": ""
+						},
+						{
+							"id": "3277",
+							"uri": "http://host.docker.internal:8000/api/auth/actuator/health",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/auth\/actuator\/health",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "404",
+							"otherinfo": ""
+						},
+						{
+							"id": "2906",
+							"uri": "http://host.docker.internal:8000/api/auth/me/",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/auth\/me\/",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "404",
+							"otherinfo": ""
+						},
+						{
+							"id": "4",
+							"uri": "http://host.docker.internal:8000/api/cart",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/cart",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "401",
+							"otherinfo": ""
+						},
+						{
+							"id": "2907",
+							"uri": "http://host.docker.internal:8000/api/cart/",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/cart\/",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "404",
+							"otherinfo": ""
+						},
+						{
+							"id": "24",
+							"uri": "http://host.docker.internal:8000/api/cart/6205364118878164141",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/cart\/6205364118878164141",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "404",
+							"otherinfo": ""
+						},
+						{
+							"id": "2908",
+							"uri": "http://host.docker.internal:8000/api/categories/",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/categories\/",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "404",
+							"otherinfo": ""
+						},
+						{
+							"id": "8",
+							"uri": "http://host.docker.internal:8000/api/orders",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/orders",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "401",
+							"otherinfo": ""
+						},
+						{
+							"id": "2910",
+							"uri": "http://host.docker.internal:8000/api/orders/",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/orders\/",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "404",
+							"otherinfo": ""
+						},
+						{
+							"id": "25",
+							"uri": "http://host.docker.internal:8000/api/orders/8277853171290755132",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/orders\/8277853171290755132",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "401",
+							"otherinfo": ""
+						},
+						{
+							"id": "10",
+							"uri": "http://host.docker.internal:8000/api/orders/code",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/orders\/code",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "401",
+							"otherinfo": ""
+						},
+						{
+							"id": "2909",
+							"uri": "http://host.docker.internal:8000/api/orders/code/",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/orders\/code\/",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "404",
+							"otherinfo": ""
+						},
+						{
+							"id": "218",
+							"uri": "http://host.docker.internal:8000/api/products?q=q&categoria=categoria&orden=relevancia&destacados=http%3A%2F%2Fwww.google.com%2F",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/products (categoria,destacados,orden,q)",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "422",
+							"otherinfo": ""
+						},
+						{
+							"id": "2911",
+							"uri": "http://host.docker.internal:8000/api/products/",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/products\/",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "404",
+							"otherinfo": ""
+						},
+						{
+							"id": "2915",
+							"uri": "http://host.docker.internal:8000/api/products/10/",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/products\/10\/",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "404",
+							"otherinfo": ""
+						},
+						{
+							"id": "26",
+							"uri": "http://host.docker.internal:8000/api/products/1882223179674772714",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/products\/1882223179674772714",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "404",
+							"otherinfo": ""
+						},
+						{
+							"id": "2916",
+							"uri": "http://host.docker.internal:8000/health/",
+							"nodeName": "http:\/\/host.docker.internal:8000\/health\/",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "404",
+							"otherinfo": ""
+						},
+						{
+							"id": "2913",
+							"uri": "http://host.docker.internal:8000/openapi.json/",
+							"nodeName": "http:\/\/host.docker.internal:8000\/openapi.json\/",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "404",
+							"otherinfo": ""
+						},
+						{
+							"id": "83",
+							"uri": "http://host.docker.internal:8000/secure",
+							"nodeName": "http:\/\/host.docker.internal:8000\/secure",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "404",
+							"otherinfo": ""
+						},
+						{
+							"id": "2918",
+							"uri": "http://host.docker.internal:8000/secure/",
+							"nodeName": "http:\/\/host.docker.internal:8000\/secure\/",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "404",
+							"otherinfo": ""
+						},
+						{
+							"id": "27",
+							"uri": "http://host.docker.internal:8000/secure/5672439511411750072",
+							"nodeName": "http:\/\/host.docker.internal:8000\/secure\/5672439511411750072",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "404",
+							"otherinfo": ""
+						},
+						{
+							"id": "96",
+							"uri": "http://host.docker.internal:8000/unsecure",
+							"nodeName": "http:\/\/host.docker.internal:8000\/unsecure",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "404",
+							"otherinfo": ""
+						},
+						{
+							"id": "2919",
+							"uri": "http://host.docker.internal:8000/unsecure/",
+							"nodeName": "http:\/\/host.docker.internal:8000\/unsecure\/",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "404",
+							"otherinfo": ""
+						},
+						{
+							"id": "28",
+							"uri": "http://host.docker.internal:8000/unsecure/7502862354492618654",
+							"nodeName": "http:\/\/host.docker.internal:8000\/unsecure\/7502862354492618654",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "404",
+							"otherinfo": ""
+						},
+						{
+							"id": "0",
+							"uri": "http://host.docker.internal:8000/api/auth/login",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/auth\/login ()({email,password})",
+							"method": "POST",
+							"param": "",
+							"attack": "",
+							"evidence": "401",
+							"otherinfo": ""
+						},
+						{
+							"id": "2923",
+							"uri": "http://host.docker.internal:8000/api/auth/login",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/auth\/login ()({email,password})",
+							"method": "POST",
+							"param": "",
+							"attack": "",
+							"evidence": "422",
+							"otherinfo": ""
+						},
+						{
+							"id": "317",
+							"uri": "http://host.docker.internal:8000/api/auth/login",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/auth\/login ()({email,password})",
+							"method": "POST",
+							"param": "",
+							"attack": "",
+							"evidence": "429",
+							"otherinfo": ""
+						},
+						{
+							"id": "2883",
+							"uri": "http://host.docker.internal:8000/api/auth/login/",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/auth\/login\/ ()({email,password})",
+							"method": "POST",
+							"param": "",
+							"attack": "",
+							"evidence": "405",
+							"otherinfo": ""
+						},
+						{
+							"id": "2879",
+							"uri": "http://host.docker.internal:8000/api/auth/logout/",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/auth\/logout\/",
+							"method": "POST",
+							"param": "",
+							"attack": "",
+							"evidence": "405",
+							"otherinfo": ""
+						},
+						{
+							"id": "231",
+							"uri": "http://host.docker.internal:8000/api/auth/register",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/auth\/register ()({nombre,email,password,telefono,direccion,ciudad})",
+							"method": "POST",
+							"param": "",
+							"attack": "",
+							"evidence": "409",
+							"otherinfo": ""
+						},
+						{
+							"id": "1",
+							"uri": "http://host.docker.internal:8000/api/auth/register",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/auth\/register ()({nombre,email,password,telefono,direccion,ciudad})",
+							"method": "POST",
+							"param": "",
+							"attack": "",
+							"evidence": "422",
+							"otherinfo": ""
+						},
+						{
+							"id": "2882",
+							"uri": "http://host.docker.internal:8000/api/auth/register/",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/auth\/register\/ ()({nombre,email,password,telefono,direccion,ciudad})",
+							"method": "POST",
+							"param": "",
+							"attack": "",
+							"evidence": "405",
+							"otherinfo": ""
+						},
+						{
+							"id": "5",
+							"uri": "http://host.docker.internal:8000/api/cart",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/cart ()({producto_id,cantidad})",
+							"method": "POST",
+							"param": "",
+							"attack": "",
+							"evidence": "401",
+							"otherinfo": ""
+						},
+						{
+							"id": "2890",
+							"uri": "http://host.docker.internal:8000/api/cart/",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/cart\/ ()({producto_id,cantidad})",
+							"method": "POST",
+							"param": "",
+							"attack": "",
+							"evidence": "405",
+							"otherinfo": ""
+						},
+						{
+							"id": "9",
+							"uri": "http://host.docker.internal:8000/api/orders",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/orders ()({direccion,ciudad,metodo_pago})",
+							"method": "POST",
+							"param": "",
+							"attack": "",
+							"evidence": "401",
+							"otherinfo": ""
+						},
+						{
+							"id": "2889",
+							"uri": "http://host.docker.internal:8000/api/orders/",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/orders\/ ()({direccion,ciudad,metodo_pago})",
+							"method": "POST",
+							"param": "",
+							"attack": "",
+							"evidence": "405",
+							"otherinfo": ""
+						},
+						{
+							"id": "2171",
+							"uri": "http://host.docker.internal:8000/computeMetadata/v1/",
+							"nodeName": "http:\/\/host.docker.internal:8000\/computeMetadata\/v1\/ ()({email,password})",
+							"method": "POST",
+							"param": "",
+							"attack": "",
+							"evidence": "405",
+							"otherinfo": ""
+						},
+						{
+							"id": "2151",
+							"uri": "http://host.docker.internal:8000/latest/meta-data/",
+							"nodeName": "http:\/\/host.docker.internal:8000\/latest\/meta-data\/ ()({email,password})",
+							"method": "POST",
+							"param": "",
+							"attack": "",
+							"evidence": "405",
+							"otherinfo": ""
+						},
+						{
+							"id": "2260",
+							"uri": "http://host.docker.internal:8000/metadata/instance",
+							"nodeName": "http:\/\/host.docker.internal:8000\/metadata\/instance ()({email,password})",
+							"method": "POST",
+							"param": "",
+							"attack": "",
+							"evidence": "405",
+							"otherinfo": ""
+						},
+						{
+							"id": "2271",
+							"uri": "http://host.docker.internal:8000/metadata/v1",
+							"nodeName": "http:\/\/host.docker.internal:8000\/metadata\/v1 ()({email,password})",
+							"method": "POST",
+							"param": "",
+							"attack": "",
+							"evidence": "405",
+							"otherinfo": ""
+						},
+						{
+							"id": "2194",
+							"uri": "http://host.docker.internal:8000/opc/v1/instance/",
+							"nodeName": "http:\/\/host.docker.internal:8000\/opc\/v1\/instance\/ ()({email,password})",
+							"method": "POST",
+							"param": "",
+							"attack": "",
+							"evidence": "405",
+							"otherinfo": ""
+						},
+						{
+							"id": "2215",
+							"uri": "http://host.docker.internal:8000/opc/v2/instance/",
+							"nodeName": "http:\/\/host.docker.internal:8000\/opc\/v2\/instance\/ ()({email,password})",
+							"method": "POST",
+							"param": "",
+							"attack": "",
+							"evidence": "405",
+							"otherinfo": ""
+						},
+						{
+							"id": "2281",
+							"uri": "http://host.docker.internal:8000/openstack/latest/meta_data.json",
+							"nodeName": "http:\/\/host.docker.internal:8000\/openstack\/latest\/meta_data.json ()({email,password})",
+							"method": "POST",
+							"param": "",
+							"attack": "",
+							"evidence": "405",
+							"otherinfo": ""
+						},
+						{
+							"id": "12",
+							"uri": "http://host.docker.internal:8000/secure/chat",
+							"nodeName": "http:\/\/host.docker.internal:8000\/secure\/chat ()({message,session_id})",
+							"method": "POST",
+							"param": "",
+							"attack": "",
+							"evidence": "401",
+							"otherinfo": ""
+						},
+						{
+							"id": "2888",
+							"uri": "http://host.docker.internal:8000/secure/chat/",
+							"nodeName": "http:\/\/host.docker.internal:8000\/secure\/chat\/ ()({message,session_id})",
+							"method": "POST",
+							"param": "",
+							"attack": "",
+							"evidence": "405",
+							"otherinfo": ""
+						},
+						{
+							"id": "11",
+							"uri": "http://host.docker.internal:8000/unsecure/chat",
+							"nodeName": "http:\/\/host.docker.internal:8000\/unsecure\/chat ()({message,session_id})",
+							"method": "POST",
+							"param": "",
+							"attack": "",
+							"evidence": "401",
+							"otherinfo": ""
+						},
+						{
+							"id": "2887",
+							"uri": "http://host.docker.internal:8000/unsecure/chat/",
+							"nodeName": "http:\/\/host.docker.internal:8000\/unsecure\/chat\/ ()({message,session_id})",
+							"method": "POST",
+							"param": "",
+							"attack": "",
+							"evidence": "405",
+							"otherinfo": ""
+						},
+						{
+							"id": "2",
+							"uri": "http://host.docker.internal:8000/api/auth/me",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/auth\/me ()({nombre,telefono,direccion,ciudad})",
+							"method": "PUT",
+							"param": "",
+							"attack": "",
+							"evidence": "401",
+							"otherinfo": ""
+						},
+						{
+							"id": "2884",
+							"uri": "http://host.docker.internal:8000/api/auth/me/",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/auth\/me\/ ()({nombre,telefono,direccion,ciudad})",
+							"method": "PUT",
+							"param": "",
+							"attack": "",
+							"evidence": "405",
+							"otherinfo": ""
+						},
+						{
+							"id": "3",
+							"uri": "http://host.docker.internal:8000/api/auth/password",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/auth\/password ()({actual,nueva})",
+							"method": "PUT",
+							"param": "",
+							"attack": "",
+							"evidence": "401",
+							"otherinfo": ""
+						},
+						{
+							"id": "2881",
+							"uri": "http://host.docker.internal:8000/api/auth/password/",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/auth\/password\/ ()({actual,nueva})",
+							"method": "PUT",
+							"param": "",
+							"attack": "",
+							"evidence": "405",
+							"otherinfo": ""
+						},
+						{
+							"id": "6",
+							"uri": "http://host.docker.internal:8000/api/cart/10",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/cart\/10 ()({producto_id,cantidad})",
+							"method": "PUT",
+							"param": "",
+							"attack": "",
+							"evidence": "401",
+							"otherinfo": ""
+						},
+						{
+							"id": "2886",
+							"uri": "http://host.docker.internal:8000/api/cart/10/",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/cart\/10\/ ()({producto_id,cantidad})",
+							"method": "PUT",
+							"param": "",
+							"attack": "",
+							"evidence": "405",
+							"otherinfo": ""
+						}
+					],
+					"count": "79",
+					"systemic": false,
+					"solution": "",
+					"otherinfo": "",
+					"reference": "",
+					"cweid": "388",
+					"wascid": "20",
+					"sourceid": "19"
+				},
+				{
+					"pluginid": "10111",
+					"alertRef": "10111",
+					"alert": "Authentication Request Identified",
+					"name": "Authentication Request Identified",
+					"riskcode": "0",
+					"confidence": "3",
+					"riskdesc": "Informational (High)",
+					"desc": "<p>The given request has been identified as an authentication request. The 'Other Info' field contains a set of key=value lines which identify any relevant fields. If the request is in a context which has an Authentication Method set to \"Auto-Detect\" then this rule will change the authentication to match the request identified.</p>",
+					"instances":[ 
+						{
+							"id": "273",
+							"uri": "http://host.docker.internal:8000/api/auth/login",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/auth\/login ()({email,password})",
+							"method": "POST",
+							"param": "email",
+							"attack": "",
+							"evidence": "password",
+							"otherinfo": "userParam=email\nuserValue=zaproxy@example.com\npasswordParam=password"
+						}
+					],
+					"count": "1",
+					"systemic": false,
+					"solution": "<p>This is an informational alert rather than a vulnerability and so there is nothing to fix.</p>",
+					"otherinfo": "<p>userParam=email</p><p>userValue=zaproxy@example.com</p><p>passwordParam=password</p>",
+					"reference": "<p>https://www.zaproxy.org/docs/desktop/addons/authentication-helper/auth-req-id/</p>",
+					"cweid": "-1",
+					"wascid": "-1",
+					"sourceid": "3"
+				},
+				{
+					"pluginid": "10049",
+					"alertRef": "10049-1",
+					"alert": "Non-Storable Content",
+					"name": "Non-Storable Content",
+					"riskcode": "0",
+					"confidence": "2",
+					"riskdesc": "Informational (Medium)",
+					"desc": "<p>The response contents are not storable by caching components such as proxy servers. If the response does not contain sensitive, personal or user-specific information, it may benefit from being stored and cached, to improve performance.</p>",
+					"instances":[ 
+						{
+							"id": "285",
+							"uri": "http://host.docker.internal:8000/api/admin/evaluation",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/admin\/evaluation",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "401",
+							"otherinfo": ""
+						},
+						{
+							"id": "282",
+							"uri": "http://host.docker.internal:8000/api/admin/services",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/admin\/services",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "401",
+							"otherinfo": ""
+						},
+						{
+							"id": "289",
+							"uri": "http://host.docker.internal:8000/api/auth/login",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/auth\/login ()({email,password})",
+							"method": "POST",
+							"param": "",
+							"attack": "",
+							"evidence": "401",
+							"otherinfo": ""
+						},
+						{
+							"id": "283",
+							"uri": "http://host.docker.internal:8000/api/auth/register",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/auth\/register ()({nombre,email,password,telefono,direccion,ciudad})",
+							"method": "POST",
+							"param": "",
+							"attack": "",
+							"evidence": "422",
+							"otherinfo": ""
+						},
+						{
+							"id": "281",
+							"uri": "http://host.docker.internal:8000/api/orders",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/orders ()({direccion,ciudad,metodo_pago})",
+							"method": "POST",
+							"param": "",
+							"attack": "",
+							"evidence": "401",
+							"otherinfo": ""
+						}
+					],
+					"count": "5",
+					"systemic": true,
+					"solution": "<p>The content may be marked as storable by ensuring that the following conditions are satisfied:</p><p>The request method must be understood by the cache and defined as being cacheable (\"GET\", \"HEAD\", and \"POST\" are currently defined as cacheable)</p><p>The response status code must be understood by the cache (one of the 1XX, 2XX, 3XX, 4XX, or 5XX response classes are generally understood)</p><p>The \"no-store\" cache directive must not appear in the request or response header fields</p><p>For caching by \"shared\" caches such as \"proxy\" caches, the \"private\" response directive must not appear in the response</p><p>For caching by \"shared\" caches such as \"proxy\" caches, the \"Authorization\" header field must not appear in the request, unless the response explicitly allows it (using one of the \"must-revalidate\", \"public\", or \"s-maxage\" Cache-Control response directives)</p><p>In addition to the conditions above, at least one of the following conditions must also be satisfied by the response:</p><p>It must contain an \"Expires\" header field</p><p>It must contain a \"max-age\" response directive</p><p>For \"shared\" caches such as \"proxy\" caches, it must contain a \"s-maxage\" response directive</p><p>It must contain a \"Cache Control Extension\" that allows it to be cached</p><p>It must have a status code that is defined as cacheable by default (200, 203, 204, 206, 300, 301, 404, 405, 410, 414, 501).</p>",
+					"otherinfo": "",
+					"reference": "<p>https://datatracker.ietf.org/doc/html/rfc7234</p><p>https://datatracker.ietf.org/doc/html/rfc7231</p><p>https://www.w3.org/Protocols/rfc2616/rfc2616-sec13.html</p>",
+					"cweid": "524",
+					"wascid": "13",
+					"sourceid": "32"
+				},
+				{
+					"pluginid": "10049",
+					"alertRef": "10049-2",
+					"alert": "Storable but Non-Cacheable Content",
+					"name": "Storable but Non-Cacheable Content",
+					"riskcode": "0",
+					"confidence": "2",
+					"riskdesc": "Informational (Medium)",
+					"desc": "<p>The response contents are storable by caching components such as proxy servers, but will not be retrieved directly from the cache, without validating the request upstream, in response to similar requests from other users.</p>",
+					"instances":[ 
+						{
+							"id": "291",
+							"uri": "http://host.docker.internal:8000/api/auth/me",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/auth\/me",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "no-cache",
+							"otherinfo": ""
+						},
+						{
+							"id": "295",
+							"uri": "http://host.docker.internal:8000/api/categories",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/categories",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "no-cache",
+							"otherinfo": ""
+						},
+						{
+							"id": "294",
+							"uri": "http://host.docker.internal:8000/api/products?q=q&categoria=categoria&orden=relevancia&destacados=false",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/products (categoria,destacados,orden,q)",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "no-cache",
+							"otherinfo": ""
+						},
+						{
+							"id": "284",
+							"uri": "http://host.docker.internal:8000/api/products/10",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/products\/10",
+							"method": "GET",
+							"param": "",
+							"attack": "",
+							"evidence": "no-cache",
+							"otherinfo": ""
+						},
+						{
+							"id": "299",
+							"uri": "http://host.docker.internal:8000/api/auth/logout",
+							"nodeName": "http:\/\/host.docker.internal:8000\/api\/auth\/logout",
+							"method": "POST",
+							"param": "",
+							"attack": "",
+							"evidence": "no-cache",
+							"otherinfo": ""
+						}
+					],
+					"count": "5",
+					"systemic": false,
+					"solution": "",
+					"otherinfo": "",
+					"reference": "<p>https://datatracker.ietf.org/doc/html/rfc7234</p><p>https://datatracker.ietf.org/doc/html/rfc7231</p><p>https://www.w3.org/Protocols/rfc2616/rfc2616-sec13.html</p>",
+					"cweid": "524",
+					"wascid": "13",
+					"sourceid": "8"
+				}
+			]
+		}
+	],
+	"sequences":[
+	]
+
+}
