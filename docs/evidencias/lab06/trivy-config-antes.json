@@ -9,7 +9,7 @@
   "ArtifactName": "/src",
   "ArtifactType": "repository",
   "Metadata": {
-    "RepoURL": "https://github.com/saraarteagar91/fdsi-gp-04-pii-llm.git",
+    "RepoURL": "https://github.com/<repositorio-del-grupo>.git",
     "Branch": "security/lab06-hallazgos",
     "Commit": "12b0ead410813a50e77f7ae6e5d94988c5c9d255",
     "CommitMsg": "Lab 05: unificar puertos de evidencia y nombres en guion y PR",

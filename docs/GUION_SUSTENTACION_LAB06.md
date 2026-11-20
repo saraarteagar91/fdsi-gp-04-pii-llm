@@ -1,6 +1,6 @@
 # Guion de sustentación — Lab. 06 (5 minutos)
 
-**Quién habla:** A = Johan · B = Sara · C = Camilo
+**Quién habla:** A = Johan · B = Camilo
 
 **Tener abierto antes de empezar:**
 - `docs/REPORTE_HALLAZGOS_LAB06.md`
@@ -17,24 +17,24 @@
 - **Solución:** ahora la contraseña es aleatoria y vive en `secrets/`, que no se sube a git. Además creamos una regla propia de Gitleaks para detectar esto.
 - **Validación (en vivo):** correr `python -m scripts.dast_manual` y mostrar que la prueba D-01 ahora da 401.
 
-### 3. SAST — C (1 min)
+### 3. SAST — A (1 min)
 - **Qué:** un XSS en el panel de auditoría. Se mostraba como HTML cualquier texto que empezara por `<div`, incluso la respuesta del LLM.
 - **Cómo:** Semgrep no encontró nada; lo vimos revisando el código. Bandit marcó 3 consultas SQL, pero son falsos positivos porque usan parámetros. También marcó los códigos de pedido hechos con `random`, y ese aviso sí aplicaba.
 - **Solución:** solo se pinta como HTML lo que marcamos como seguro; todo lo demás se escapa. Los códigos de pedido ahora usan `secrets`.
 - **Validación:** pruebas automáticas nuevas.
 
-### 4. SCA — A (1 min)
+### 4. SCA — B (1 min)
 - **Qué:** 21 vulnerabilidades en 4 librerías. Lo interesante: `certifi` ya estaba corregido en `requirements.txt` desde el Lab. 05, pero nunca reinstalamos el entorno.
 - **Cómo:** pip-audit y Trivy. Revisamos si cada vulnerabilidad nos afectaba de verdad.
 - **Solución:** actualizamos las librerías y el Dockerfile.
 - **Validación:** pip-audit pasó de 21 a 0.
 
-### 5. DAST — B (55 s)
+### 5. DAST — A (55 s)
 - **Qué:** ZAP no encontró fallas graves, solo avisos; corregimos dos encabezados que faltaban. Como ZAP no inicia sesión, hicimos 11 pruebas propias. Con ellas vimos que en "cambiar contraseña" se podía adivinar la contraseña actual sin límite.
 - **Solución:** ahora se bloquea a los 5 intentos.
 - **Validación:** las 11 pruebas pasan. También comprobamos que un cliente no puede ver pedidos ajenos ni entrar a las páginas de admin.
 
-### 6. Cierre — C (20 s)
+### 6. Cierre — B (20 s)
 "Pasamos de 75 a 84 pruebas, todas en verde. Lo que más aprendimos: las herramientas automáticas no encontraron los dos problemas más graves. Hizo falta revisar el código y probar la app con sesión iniciada."
 
 ---

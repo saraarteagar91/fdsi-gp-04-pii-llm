@@ -1,7 +1,7 @@
 # Lab. 06 — Hallazgos de seguridad
 
 **Proyecto:** FDSI-GP-04 — Andes Market
-**Integrantes:** Johan Sebastián Beltrán, Sara Arteaga, Andrés Camilo Vivas
+**Integrantes:** Johan Sebastián Beltrán, Andrés Camilo Vivas
 **Rama:** `security/lab06-hallazgos` (sale de `security/lab-fsi`)
 **Entorno:** la app corriendo en nuestro PC (`http://127.0.0.1:8000`) con datos ficticios.
 **Evidencias:** carpeta `docs/evidencias/lab06/` (cada reporte tiene versión `antes` y `después`).
