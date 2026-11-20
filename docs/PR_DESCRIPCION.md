@@ -6,7 +6,8 @@ Integra controles de seguridad al ciclo de desarrollo y corrige los hallazgos pr
 - **Pipeline:** workflow `Seguridad estática - SAST y secretos` (Semgrep + Gitleaks) en cada PR, y workflow manual de DAST pasivo con OWASP ZAP. Las acciones están fijadas a SHA.
 - **F-01 (corregido):** middleware `security_headers` en `app/main.py` que agrega CSP, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy` y `Cross-Origin-Opener-Policy`.
 - **F-03 (corregido):** `certifi>=2026.10.18` en `requirements.txt`.
-- **Prueba de regresión:** `tests/test_security_headers.py`.
+- **F-08 (corregido):** el panel de auditoría de `static/app.js` ya no decide por `startsWith("<div")` si escapa; el HTML propio se marca con `trusted()` y el texto del usuario y del LLM pasa siempre por `esc()` (CodeQL #3).
+- **Pruebas de regresión:** `tests/test_security_headers.py` y `tests/test_audit_panel_xss.py`.
 - **Documentación:** `docs/SECURITY.md`, `docs/REPORTE_HALLAZGOS.md` y evidencias en `docs/evidencias/`.
 - **Limpieza:** `.idea/` sale del repositorio y se agrega a `.gitignore`.
 
@@ -21,6 +22,10 @@ Línea base: `9844c90` · Entorno: localhost con datos ficticios.
 | F-04 | A06 | `filelock` 4.2.0, transitiva de torch/huggingface_hub | Bajo | Aceptado / pendiente |
 | F-05 | Informativo | CSP con `style-src 'unsafe-inline'` | Bajo | Riesgo residual |
 | F-06 | Informativo | Comentario "admin" en `app.js` reportado por ZAP | Info | Falso positivo |
+| F-07 | Secretos | Gitleaks marcó texto de ejemplo de un exploit de filelock en `pip-audit.json` | Info | Falso positivo (`.gitleaksignore`) |
+| F-08 | A03 / CWE-79 | CodeQL #3: XSS en el panel de auditoría por `startsWith("<div")` | Alto | ✅ Corregido |
+| F-09 | CWE-1333 | CodeQL #1: regex del correo (`auth.py:48`), limitado a 200 caracteres | Bajo | Aceptado / mitigado |
+| F-10 | CWE-1333 | CodeQL #2: regex de presentación (`engine.py:155`) sobre máximo 30 caracteres | Info | Falso positivo |
 
 ### Evidencias (antes → después)
 | Herramienta | Antes | Después | Archivos |
@@ -29,7 +34,7 @@ Línea base: `9844c90` · Entorno: localhost con datos ficticios.
 | Gitleaks (historial completo) | 0 | 0 | `docs/evidencias/gitleaks.json` |
 | pip-audit | 20 avisos / 3 paquetes | certifi corregido | `docs/evidencias/pip-audit.json` |
 | OWASP ZAP baseline | 7 WARN | 4 WARN (0 FAIL) | `docs/evidencias/zap-antes.html`, `zap-despues.html` |
-| pytest | 68 | 75 (incluye 7 nuevas) | `tests/test_security_headers.py` |
+| pytest | 68 | 77 (incluye 9 nuevas) | `tests/test_security_headers.py`, `tests/test_audit_panel_xss.py` |
 
 Validación manual: antes, `curl -sI http://localhost:8077/` no devolvía `Content-Security-Policy` ni `X-Frame-Options`; después devuelve ambos.
 
@@ -44,6 +49,6 @@ Validación manual: antes, `curl -sI http://localhost:8077/` no devolvía `Conte
 - [x] Vinculé hallazgos, decisiones de mitigación y evidencias.
 
 ### Limitaciones
-- CodeQL Default setup y secret scanning nativo están pendientes de activar en Settings → Advanced Security.
+- CodeQL (Default setup), secret scanning, push protection y Dependabot quedaron activados el 2026-11-20; la primera ejecución de CodeQL fue sobre main, no sobre la rama corregida.
 - El DAST fue pasivo y local, sin HTTPS.
 - El pipeline corre en modo no bloqueante (`|| true` / `-I`): en verde no significa seguro.

@@ -18,9 +18,10 @@
 | Herramienta | Tipo | Fecha | Resultado (antes → después) | Enlace a evidencia |
 |---|---|---|---|---|
 | Semgrep 1.183 (`p/owasp-top-ten`, `p/secrets`) | SAST | 2026-11-04 | 6 → 0 (acciones de GitHub con tag mutable) | [antes](evidencias/semgrep-antes.json) · [después](evidencias/semgrep-despues.json) · artefacto `resultado-semgrep` en Actions |
-| CodeQL Default setup | SAST | — | Pendiente de activar en Settings → Advanced Security (disponible al ser repo público) | Settings → Advanced Security |
+| CodeQL Default setup | SAST | 2026-11-20 | Activado el 2026-11-20 (Default setup, Python y JavaScript/TypeScript). Primera ejecución sobre main: 3 alertas High (1 real corregida, 1 riesgo bajo mitigado, 1 falso positivo) | Security → Code scanning (alertas #1, #2 y #3) |
 | Gitleaks 8 (historial completo, 8 commits) | Secretos | 2026-11-04 | 0 secretos | [gitleaks.json](evidencias/gitleaks.json) · job `Gitleaks` en Actions |
-| pip-audit (entorno `.venv`) / Dependabot | SCA | 2026-11-04 | 20 avisos en 3 paquetes (certifi, filelock, setuptools) | [pip-audit.json](evidencias/pip-audit.json) |
+| Secret scanning y push protection (GitHub) | Secretos | 2026-11-20 | Activados, 0 alertas | Security → Secret scanning |
+| pip-audit (entorno `.venv`) / Dependabot | SCA | 2026-11-04 / 2026-11-20 | Dependabot alerts y security updates activados el 2026-11-20: 0 alertas abiertas. Cobertura limitada porque `requirements.txt` usa rangos `>=` sin versiones fijas; pip-audit sobre el `.venv` sí encontró 20 avisos en 3 paquetes (certifi, filelock, setuptools) | [pip-audit.json](evidencias/pip-audit.json) · Security → Dependabot |
 | OWASP ZAP Baseline (Docker, pasivo) | DAST pasivo | 2026-11-04 | 7 → 4 alertas WARN, 0 FAIL | [antes](evidencias/zap-antes.html) · [después](evidencias/zap-despues.html) |
 
 ## 3. Hallazgos y gestión
@@ -33,11 +34,14 @@
 | F-05 | Informativo | CSP permite `style-src 'unsafe-inline'` por los `style="..."` de las plantillas | Bajo | `static/app.js`, `static/index.html` | Mover estilos en línea a `styles.css` | Riesgo residual |
 | F-06 | Informativo | ZAP detecta el comentario "centro de seguridad (admin)" en `app.js` | Informativo | `static/app.js` | Ninguno: la ruta igual exige rol admin en el servidor | Falso positivo |
 | F-07 | Secretos (falso positivo) | Gitleaks marcó con la regla `generic-api-key` el texto de ejemplo de un exploit de `filelock` dentro del reporte de pip-audit; no es una credencial del proyecto | Informativo | `docs/evidencias/pip-audit.json` | Ignorar solo ese hallazgo con un fingerprint en `.gitleaksignore`; no excluir la carpeta | Cerrado (falso positivo documentado) |
+| F-08 | A03 Injection / CWE-79 (CodeQL #3, "DOM text reinterpreted as HTML") | `step()` del panel de auditoría insertaba sin escapar cualquier texto que empezara por `<div` (`startsWith("<div")`), incluido el mensaje del usuario y la respuesta del LLM; el título con `llm_provider` tampoco se escapaba | Alto | `static/app.js` | Marcar el HTML propio con `trusted()` y pasar siempre el resto por `esc()`; prueba `tests/test_audit_panel_xss.py` | **Corregido** |
+| F-09 | CWE-1333 (CodeQL #1, "Polynomial regular expression used on uncontrolled data") | `_EMAIL_RE` se aplica al correo del registro; mitigado porque `LoginIn`/`RegisterIn` limitan el correo a `max_length=200` | Bajo | `app/routers/auth.py:48` | Validar el correo con un tipo de Pydantic en lugar de una regex propia | Aceptado / mitigado |
+| F-10 | CWE-1333 (CodeQL #2, "Polynomial regular expression used on uncontrolled data") | `_PRESENTATION_RE` solo se aplica a un fragmento de máximo 30 caracteres (`text[max(0, r.start - 30):r.start]`) | Informativo | `guardian/engine.py:155` | Ninguno | Falso positivo |
 
 ## 4. Validación antes y después
 - Evidencia inicial: `curl -sI http://localhost:8077/` solo devolvía `content-type`, `etag` y `cache-control`. ZAP: alertas 10020, 10021, 10038 y 10063.
 - Pull request con corrección: rama `security/lab-fsi` → `experimentos` (https://github.com/saraarteagar91/fdsi-gp-04-pii-llm/pull/2).
-- Evidencia de reescaneo: ZAP ya no reporta 10020/10021/10038/10063. Semgrep pasa de 6 a 0 hallazgos. Las 75 pruebas de `pytest` pasan, incluida `tests/test_security_headers.py`.
+- Evidencia de reescaneo: ZAP ya no reporta 10020/10021/10038/10063. Semgrep pasa de 6 a 0 hallazgos. Las 77 pruebas de `pytest` pasan, incluida `tests/test_security_headers.py`.
 - Riesgo residual y decisión: `style-src 'unsafe-inline'` (F-05) y COEP ausente (no aplica: la página no usa `SharedArrayBuffer`). Swagger `/docs` queda sin CSP porque carga scripts de un CDN; se recomienda desactivarlo en producción.
 
 ## 5. Pentest autorizado
@@ -50,8 +54,9 @@
 - Recomendación y prueba de regresión: `tests/test_security_headers.py` comprueba los encabezados en `/`, archivos estáticos, `/health` y un 404, y que `script-src` no permita `unsafe-inline` ni `unsafe-eval`.
 
 ## 6. Limitaciones
-- El repositorio es público, así que CodeQL Default setup y secret scanning nativo están disponibles sin costo. Sus resultados se registrarán cuando se activen en Settings → Advanced Security. Mientras tanto, Semgrep y Gitleaks cubren SAST y secretos.
+- CodeQL (Default setup), secret scanning, push protection y Dependabot alerts/security updates quedaron activados el 2026-11-20.
+- Dependabot tiene cobertura limitada porque `requirements.txt` usa rangos `>=` sin versiones fijas.
+- La primera ejecución de CodeQL fue sobre `main`, no sobre la rama corregida.
 - Al ser público, cualquier persona puede ver las evidencias de `docs/evidencias/`. Solo contienen datos ficticios y `localhost`.
-- Activar Dependabot y los controles de Settings requiere permisos de administrador del repositorio.
 - El DAST es pasivo y local: no evalúa TLS/HSTS (no hay HTTPS) ni las respuestas del LLM.
 - Un pipeline en verde no significa que la aplicación sea segura: Semgrep y ZAP corren con `|| true` / `-I`.

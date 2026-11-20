@@ -49,11 +49,38 @@ Identificación del alcance → SAST (Semgrep) → detección de secretos (Gitle
 - **Por qué es falso positivo:** es parte de la descripción de un CVE de `filelock` que trae el reporte de pip-audit (ejemplo de exploit con ruta de víctima y token de muestra), no una credencial del proyecto.
 - **Decisión:** se ignora solo ese hallazgo con un fingerprint en `.gitleaksignore`. No se excluye la carpeta `docs/evidencias/` para seguir vigilándola.
 
+## Hallazgo F-08
+- **Título:** El panel de auditoría inserta como HTML el texto del usuario y del LLM (CodeQL #3, "DOM text reinterpreted as HTML")
+- **Categoría OWASP/CWE:** A03:2021 Injection; CWE-79 (Cross-site Scripting)
+- **Severidad y justificación:** Alta. El panel muestra el mensaje del usuario (`d.userText`) y la respuesta del LLM (`a.llm_output`). Un texto que empiece por `<div` se ejecutaría en el navegador, y la respuesta del LLM puede estar influida por terceros (inyección de prompt).
+- **Evidencia minimizada:** CodeQL alerta #3 en `static/app.js:822` (`auditBody.innerHTML` en `showAudit`). Con la entrada `<div><img src=x onerror=1>`, el `step()` anterior devolvía `<div><img src=x onerror=1>` sin escapar.
+- **Impacto:** Confidencialidad (robo de PII de la conversación) e integridad (acciones en nombre del usuario).
+- **Pasos de validación segura:** ejecutar la función `step()` con node fuera del navegador y revisar la salida. No se hizo ningún ataque sobre la app.
+- **Antes:** `step()` decidía si escapaba según el contenido: `content.startsWith("<div")` evitaba el escape, y el título (que incluye `a.llm_provider`) se insertaba sin escapar.
+- **Después:** el HTML armado por el propio código (las pills) se marca de forma explícita con `trusted()`, que crea una instancia de `TrustedHtml`. Todo lo demás pasa siempre por `esc()`, igual que el título y la clase. Un objeto que llegue por JSON no puede hacerse pasar por el marcador. El panel se ve igual que antes.
+- **Prueba de regresión:** `tests/test_audit_panel_xss.py` comprueba que `static/app.js` ya no contiene `startsWith("<div")` y ejecuta `step()` con node usando la entrada `<div><img src=x onerror=1>`: el texto del usuario, el del LLM y el título salen escapados, y las pills siguen saliendo como HTML. Falla con el código anterior y pasa con el nuevo; `pytest` pasa 77/77.
+
+## Hallazgo F-09
+- **Título:** Regex del correo con posible coste polinómico (CodeQL #1, "Polynomial regular expression used on uncontrolled data")
+- **Categoría OWASP/CWE:** CWE-1333 (Inefficient Regular Expression Complexity)
+- **Severidad y justificación:** Baja. `_EMAIL_RE` en `app/routers/auth.py:48` se aplica al correo que envía el usuario, pero `LoginIn` y `RegisterIn` limitan el correo a `max_length=200`, así que la entrada no puede crecer lo suficiente para causar una demora apreciable.
+- **Decisión:** aceptado / mitigado; no se cambia el código en este laboratorio.
+- **Mejora sugerida:** validar el correo con un tipo de Pydantic en lugar de una regex propia.
+
+## Hallazgo F-10
+- **Título:** Regex de presentación con posible coste polinómico (CodeQL #2, "Polynomial regular expression used on uncontrolled data")
+- **Categoría OWASP/CWE:** CWE-1333 — Informativo
+- **Por qué es falso positivo:** `_PRESENTATION_RE` en `guardian/engine.py:155` se aplica sobre un fragmento de máximo 30 caracteres (`text[max(0, r.start - 30):r.start]`), así que en la práctica no hay entrada larga que procesar.
+- **Decisión:** falso positivo en la práctica; no se cambia el código.
+
+## Nota sobre SCA
+Dependabot dio 0 alertas y pip-audit 20: cada herramienta cubre algo distinto. Dependabot solo ve lo declarado en `requirements.txt`, que usa rangos `>=` sin versiones fijas; pip-audit revisa lo que de verdad está instalado en el `.venv`, incluidas las dependencias transitivas.
+
 ## Reflexión final
 - **Lo que encontraron las herramientas:** ZAP encontró la falta de encabezados, que es la falla más relevante para un proyecto de PII. Semgrep solo encontró problemas en el propio pipeline. Gitleaks confirmó que `.env` y `secrets/` nunca se subieron.
 - **Lo que no pueden ver:** ninguna herramienta evalúa el riesgo central del proyecto, es decir, si el guardián deja pasar PII al LLM. Eso lo cubren las pruebas propias (`test_secure_flow.py`, `test_isolation.py`).
 - **Siguiente paso de DevSecOps:**
   - Quitar `|| true` cuando haya triage.
-  - Activar Dependabot y fijar versiones (`pip-compile`).
+  - Fijar versiones en `requirements.txt` (o usar un archivo de bloqueo) para que Dependabot pueda detectar vulnerabilidades en las dependencias (por ejemplo, con `pip-compile`).
   - Mover los estilos en línea a CSS para endurecer la CSP.
   - Correr ZAP contra un staging HTTPS.
