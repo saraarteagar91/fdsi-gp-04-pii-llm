@@ -55,7 +55,7 @@
 - El DAST es pasivo y local: no evalúa TLS/HSTS (no hay HTTPS) ni las respuestas del LLM.
 - Un pipeline en verde no significa que la aplicación sea segura: Semgrep y ZAP corren con `|| true` / `-I`.
 
-## 7. Lab. 06 — sustentación de hallazgos (rama `security/lab06-hallazgos`)
-- Informe completo: [REPORTE_HALLAZGOS_LAB06.md](REPORTE_HALLAZGOS_LAB06.md) · guion de 5 min: [GUION_SUSTENTACION_LAB06.md](GUION_SUSTENTACION_LAB06.md) · evidencias: [evidencias/lab06/](evidencias/lab06/)
-- Nuevos hallazgos corregidos: F-07 credenciales de admin publicadas (alta), F-08 XSS de DOM en auditoría (media), F-09 fuerza bruta en cambio de contraseña (media), F-10 códigos de pedido con `random` (baja), F-11 cuerpos sin límite en servicios internos (baja), F-12 dependencias e imagen base (pip-audit 21 → 0), F-13 CORP/COEP (ZAP 90004).
-- Herramientas añadidas: Bandit, Trivy (imagen y config), ZAP API scan activo, regla propia de Gitleaks (`.gitleaks.toml`) y pruebas DAST autenticadas (`scripts/dast_manual.py`). `pytest`: 84/84.
+## 7. Lab. 06 (rama `security/lab06-hallazgos`)
+- Informe: [REPORTE_HALLAZGOS_LAB06.md](REPORTE_HALLAZGOS_LAB06.md) · Guion: [GUION_SUSTENTACION_LAB06.md](GUION_SUSTENTACION_LAB06.md) · Evidencias: [evidencias/lab06/](evidencias/lab06/)
+- 7 hallazgos corregidos (F-07 a F-13). El más grave: la contraseña del admin estaba publicada en el repositorio.
+- Pruebas: 84/84.
