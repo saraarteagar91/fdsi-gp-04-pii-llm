@@ -32,10 +32,11 @@
 | F-04 | A06 Vulnerable Components | `filelock 4.2.0` (17 CVE), dependencia transitiva de torch/huggingface_hub | Bajo | entorno | Actualizar a 4.2.1 con el resto del stack de evaluación | Aceptado / pendiente |
 | F-05 | Informativo | CSP permite `style-src 'unsafe-inline'` por los `style="..."` de las plantillas | Bajo | `static/app.js`, `static/index.html` | Mover estilos en línea a `styles.css` | Riesgo residual |
 | F-06 | Informativo | ZAP detecta el comentario "centro de seguridad (admin)" en `app.js` | Informativo | `static/app.js` | Ninguno: la ruta igual exige rol admin en el servidor | Falso positivo |
+| F-07 | Secretos (falso positivo) | Gitleaks marcó con la regla `generic-api-key` el texto de ejemplo de un exploit de `filelock` dentro del reporte de pip-audit; no es una credencial del proyecto | Informativo | `docs/evidencias/pip-audit.json` | Ignorar solo ese hallazgo con un fingerprint en `.gitleaksignore`; no excluir la carpeta | Cerrado (falso positivo documentado) |
 
 ## 4. Validación antes y después
 - Evidencia inicial: `curl -sI http://localhost:8077/` solo devolvía `content-type`, `etag` y `cache-control`. ZAP: alertas 10020, 10021, 10038 y 10063.
-- Pull request con corrección: rama `security/lab-fsi` → `main` (enlazar aquí el PR).
+- Pull request con corrección: rama `security/lab-fsi` → `experimentos` (https://github.com/saraarteagar91/fdsi-gp-04-pii-llm/pull/2).
 - Evidencia de reescaneo: ZAP ya no reporta 10020/10021/10038/10063. Semgrep pasa de 6 a 0 hallazgos. Las 75 pruebas de `pytest` pasan, incluida `tests/test_security_headers.py`.
 - Riesgo residual y decisión: `style-src 'unsafe-inline'` (F-05) y COEP ausente (no aplica: la página no usa `SharedArrayBuffer`). Swagger `/docs` queda sin CSP porque carga scripts de un CDN; se recomienda desactivarlo en producción.
 

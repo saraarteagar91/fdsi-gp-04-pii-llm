@@ -42,6 +42,13 @@ Identificación del alcance → SAST (Semgrep) → detección de secretos (Gitle
 - **Corrección:** `certifi>=2026.10.18` en `requirements.txt` (versión instalada: 2026.10.23). Las pruebas siguen pasando.
 - **F-04 (`filelock` 4.2.0):** lo requieren `torch`, `huggingface_hub` y `tldextract`. No se usa en el código de la app y la mayoría de los CVE afectan a Windows o a locks que no usamos. No se actualiza a ciegas; queda pendiente con la próxima actualización del stack de evaluación.
 
+## Hallazgo F-07 (Secretos)
+- **Título:** Gitleaks reporta un posible secreto en el reporte de pip-audit
+- **Categoría:** Informativo — falso positivo
+- **Qué detectó:** regla `generic-api-key` en `docs/evidencias/pip-audit.json`, línea 1, commit `0fd9f9e`.
+- **Por qué es falso positivo:** es parte de la descripción de un CVE de `filelock` que trae el reporte de pip-audit (ejemplo de exploit con ruta de víctima y token de muestra), no una credencial del proyecto.
+- **Decisión:** se ignora solo ese hallazgo con un fingerprint en `.gitleaksignore`. No se excluye la carpeta `docs/evidencias/` para seguir vigilándola.
+
 ## Reflexión final
 - **Lo que encontraron las herramientas:** ZAP encontró la falta de encabezados, que es la falla más relevante para un proyecto de PII. Semgrep solo encontró problemas en el propio pipeline. Gitleaks confirmó que `.env` y `secrets/` nunca se subieron.
 - **Lo que no pueden ver:** ninguna herramienta evalúa el riesgo central del proyecto, es decir, si el guardián deja pasar PII al LLM. Eso lo cubren las pruebas propias (`test_secure_flow.py`, `test_isolation.py`).
