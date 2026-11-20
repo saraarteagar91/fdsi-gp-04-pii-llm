@@ -149,6 +149,12 @@ python -m scripts.train_bot
 
 Copia `.env.example` a `.env` y pon `CHATBOT_LLM_PROVIDER=anthropic` y `CHATBOT_ANTHROPIC_API_KEY=...`. Solo el servicio chatbot recibe esa clave, y Claude solo vería marcadores. No se probó porque no hay clave configurada.
 
+## Seguridad del ciclo de desarrollo (Lab. 05)
+
+[Informe de seguridad](docs/SECURITY.md) · [Reporte de hallazgos](docs/REPORTE_HALLAZGOS.md)
+
+El workflow `Seguridad estática - SAST y secretos` (Semgrep + Gitleaks) corre en cada Pull Request. El DAST pasivo con OWASP ZAP se ejecuta a mano en **Actions** o en local con Docker.
+
 ## Limitaciones
 
 - El guardián ve el dato en claro durante unos milisegundos: detectar sin leer es imposible. Lo que se garantiza es que no puede guardarlo, enviarlo afuera ni descifrarlo después. Evitar incluso ese instante requeriría detectar en el navegador del usuario o usar computación confidencial (enclaves); queda como trabajo futuro.

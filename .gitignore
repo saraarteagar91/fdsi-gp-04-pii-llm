@@ -22,3 +22,6 @@ models/*.joblib
 
 # OJO: data/evaluation_*.{csv,json,png} y data/guardian_primera_medicion.json
 # NO se ignoran: son la evidencia de los resultados para la entrega.
+
+# IDE
+.idea/

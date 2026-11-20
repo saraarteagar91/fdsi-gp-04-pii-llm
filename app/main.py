@@ -49,6 +49,43 @@ async def no_cache(request, call_next):
     return response
 
 
+# Encabezados de seguridad (Lab. 05, hallazgo F-01 de docs/SECURITY.md).
+# La página solo carga JS/CSS propios; los estilos en línea (atributos
+# style="..." de las plantillas) obligan a permitir 'unsafe-inline' solo
+# en style-src. Los scripts quedan restringidos a 'self'.
+CONTENT_SECURITY_POLICY = (
+    "default-src 'self'; "
+    "script-src 'self'; "
+    "style-src 'self' 'unsafe-inline'; "
+    "img-src 'self' data:; "
+    "connect-src 'self'; "
+    "object-src 'none'; "
+    "base-uri 'self'; "
+    "form-action 'self'; "
+    "frame-ancestors 'none'"
+)
+SECURITY_HEADERS = {
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "DENY",
+    "Referrer-Policy": "no-referrer",
+    "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=()",
+    "Cross-Origin-Opener-Policy": "same-origin",
+}
+# Swagger UI (/docs) y ReDoc cargan scripts desde un CDN: se les deja sin CSP
+# para no romper la documentación de la API durante el desarrollo.
+_DOCS_PATHS = ("/docs", "/redoc")
+
+
+@app.middleware("http")
+async def security_headers(request, call_next):
+    response = await call_next(request)
+    for name, value in SECURITY_HEADERS.items():
+        response.headers.setdefault(name, value)
+    if not request.url.path.startswith(_DOCS_PATHS):
+        response.headers.setdefault("Content-Security-Policy", CONTENT_SECURITY_POLICY)
+    return response
+
+
 @app.get("/health")
 def health() -> dict:
     return {"status": "ok", "servicios": {s: "error" not in clients.health(s) for s in ("guardian", "vault", "chatbot")}}

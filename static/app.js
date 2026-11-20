@@ -6,6 +6,12 @@
   const view = $("#view");
   const ESC = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ESC[c]);
+  // HTML armado por el propio código (con los datos ya escapados). Se marca
+  // de forma explícita con esta clase; nunca se decide por el contenido del
+  // texto, y un JSON del servidor no puede producir una instancia.
+  class TrustedHtml { constructor(html) { this.html = String(html); } }
+  const trusted = (html) => new TrustedHtml(html);
+  const asHtml = (content) => (content instanceof TrustedHtml ? content.html : `<pre>${esc(content)}</pre>`);
   const money = (n) => "$" + Number(n).toLocaleString("es-CO");
   const firstName = (n) => esc(String(n || "").split(" ")[0]);
 
@@ -812,10 +818,12 @@
       }
     }
 
+    // El texto del usuario y del LLM siempre pasa por esc(); solo el HTML
+    // marcado con trusted() (pills) se inserta tal cual.
     function step(title, content, cls) {
-      return `<div class="audit-step ${cls || ""}"><h4>${title}</h4>${content.startsWith("<div") ? content : `<pre>${esc(content)}</pre>`}</div>`;
+      return `<div class="audit-step ${esc(cls || "")}"><h4>${esc(title)}</h4>${asHtml(content)}</div>`;
     }
-    const pills = (items, bad) => `<div class="pill-list">${items.length ? items.map((t) => `<span class="pill ${bad ? "bad" : ""}">${esc(t)}</span>`).join("") : '<span class="muted small">Ninguno</span>'}</div>`;
+    const pills = (items, bad) => trusted(`<div class="pill-list">${items.length ? items.map((t) => `<span class="pill ${bad ? "bad" : ""}">${esc(t)}</span>`).join("") : '<span class="muted small">Ninguno</span>'}</div>`);
 
     function showAudit(idx) {
       const d = audits[idx];
